@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "wingcrafter",
+  "version": "${version}",
+  "name": "Wingcrafter",
+  "description": "wof in minecraft yayyyy",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/wingcrafter/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.aussiebox.wingcrafter.client.WingcrafterClient"
+    ],
+    "main": [
+      "org.aussiebox.wingcrafter.Wingcrafter"
+    ],
+    "fabric-datagen": [
+      "org.aussiebox.wingcrafter.client.WingcrafterClient"
+    ]
+  },
+  "mixins": [
+    "wingcrafter.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

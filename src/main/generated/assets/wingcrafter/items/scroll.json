@@ -1,0 +1,50 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:select",
+          "block_state_property": "written",
+          "cases": [
+            {
+              "model": {
+                "type": "minecraft:model",
+                "model": "wingcrafter:block/scroll_written"
+              },
+              "when": "true"
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "wingcrafter:block/scroll_unwritten"
+          },
+          "property": "minecraft:block_state"
+        },
+        "when": [
+          "fixed",
+          "on_shelf"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:select",
+      "block_state_property": "written",
+      "cases": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "wingcrafter:block/scroll_written_item"
+          },
+          "when": "true"
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "wingcrafter:item/scroll_unwritten_item"
+      },
+      "property": "minecraft:block_state"
+    },
+    "property": "minecraft:display_context"
+  }
+}

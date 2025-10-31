@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,rolled=false,written=false": {
+      "model": "wingcrafter:block/scroll_unwritten",
+      "y": 90
+    },
+    "facing=north,rolled=false,written=false": {
+      "model": "wingcrafter:block/scroll_unwritten"
+    },
+    "facing=south,rolled=false,written=false": {
+      "model": "wingcrafter:block/scroll_unwritten",
+      "y": 180
+    },
+    "facing=west,rolled=false,written=false": {
+      "model": "wingcrafter:block/scroll_unwritten",
+      "y": 270
+    },
+    "facing=east,rolled=true,written=false": {
+      "model": "wingcrafter:block/scroll_rolled",
+      "y": 90
+    },
+    "facing=north,rolled=true,written=false": {
+      "model": "wingcrafter:block/scroll_rolled"
+    },
+    "facing=south,rolled=true,written=false": {
+      "model": "wingcrafter:block/scroll_rolled",
+      "y": 180
+    },
+    "facing=west,rolled=true,written=false": {
+      "model": "wingcrafter:block/scroll_rolled",
+      "y": 270
+    },
+    "facing=east,rolled=false,written=true": {
+      "model": "wingcrafter:block/scroll_written",
+      "y": 90
+    },
+    "facing=north,rolled=false,written=true": {
+      "model": "wingcrafter:block/scroll_written"
+    },
+    "facing=south,rolled=false,written=true": {
+      "model": "wingcrafter:block/scroll_written",
+      "y": 180
+    },
+    "facing=west,rolled=false,written=true": {
+      "model": "wingcrafter:block/scroll_written",
+      "y": 270
+    },
+    "facing=east,rolled=true,written=true": {
+      "model": "wingcrafter:block/scroll_rolled",
+      "y": 90
+    },
+    "facing=north,rolled=true,written=true": {
+      "model": "wingcrafter:block/scroll_rolled"
+    },
+    "facing=south,rolled=true,written=true": {
+      "model": "wingcrafter:block/scroll_rolled",
+      "y": 180
+    },
+    "facing=west,rolled=true,written=true": {
+      "model": "wingcrafter:block/scroll_rolled",
+      "y": 270
+    }
+  }
+}
