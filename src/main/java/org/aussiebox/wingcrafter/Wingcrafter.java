@@ -46,6 +46,7 @@ public class Wingcrafter implements ModInitializer {
                 } else {
                     Objects.requireNonNull(blockEntity.getWorld()).setBlockState(blockEntity.getPos(), blockEntity.getWorld().getBlockState(blockEntity.getPos()).with(TITLED, false));
                 }
+
                 Objects.requireNonNull(scrollBlockEntity.getWorld()).updateListeners(payload.pos(), scrollBlockEntity.getWorld().getBlockState(payload.pos()), scrollBlockEntity.getWorld().getBlockState(payload.pos()), Block.NOTIFY_LISTENERS);
             }
         });

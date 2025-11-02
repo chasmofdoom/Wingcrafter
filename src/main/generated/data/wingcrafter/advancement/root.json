@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:gui/advancements/backgrounds/adventure",
+    "description": "Welcome to Wingcrafter!",
+    "icon": {
+      "count": 1,
+      "id": "wingcrafter:scroll_titled_item"
+    },
+    "show_toast": false,
+    "title": "Wingcrafter"
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

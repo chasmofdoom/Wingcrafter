@@ -1,0 +1,36 @@
+{
+  "parent": "wingcrafter:place_scroll",
+  "criteria": {
+    "place_written_scroll": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "wingcrafter:scroll",
+            "properties": {
+              "written": "true"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "description": "Place down a scroll that already contains writing.",
+    "icon": {
+      "count": 1,
+      "id": "wingcrafter:scroll_written_item"
+    },
+    "title": "Light Reading Material",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "requirements": [
+    [
+      "place_written_scroll"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
