@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:honeycomb",
+    "minecraft:red_dye",
+    "minecraft:paper"
+  ],
+  "result": {
+    "id": "wingcrafter:seal",
+    "count": 2
+  },
+  "group": "misc"
+}

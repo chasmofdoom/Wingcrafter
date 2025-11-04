@@ -16,6 +16,8 @@ import org.aussiebox.wingcrafter.attach.ModCustomAttachedData;
 import org.aussiebox.wingcrafter.item.ModItems;
 
 public class HudRenderingEntrypoint implements ClientModInitializer {
+    static boolean lastVisibility = false;
+
     public static final Identifier BACKGROUND = Identifier.of(Wingcrafter.MOD_ID, "textures/soul/background.png");
     public static final Identifier PROGRESS = Identifier.of(Wingcrafter.MOD_ID, "textures/soul/progress.png");
 
@@ -61,6 +63,9 @@ public class HudRenderingEntrypoint implements ClientModInitializer {
                     71,
                     8
             );
+            lastVisibility = true;
+        } else {
+            lastVisibility = false;
         }
     }
 }

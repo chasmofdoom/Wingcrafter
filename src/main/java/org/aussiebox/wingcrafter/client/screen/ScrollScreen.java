@@ -1,6 +1,7 @@
 package org.aussiebox.wingcrafter.client.screen;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -9,6 +10,7 @@ import net.minecraft.client.input.KeyInput;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
+import org.aussiebox.wingcrafter.block.custom.ScrollBlock;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
 import org.aussiebox.wingcrafter.screenhandler.ScrollBlockScreenHandler;
 
@@ -28,6 +30,7 @@ public class ScrollScreen extends HandledScreen<ScrollBlockScreenHandler> {
 
     public ScrollScreen(ScrollBlockScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        playerInventoryTitleX = -100;
     }
 
     @Override
@@ -88,6 +91,13 @@ public class ScrollScreen extends HandledScreen<ScrollBlockScreenHandler> {
         this.addDrawableChild(finishWriting);
         this.addDrawableChild(switchModes);
 
+        BlockState blockState = Objects.requireNonNull(blockEntity.getWorld()).getBlockState(blockEntity.getPos());
+        if (blockState.get(ScrollBlock.SEALED)) {
+            editMode = false;
+            switchModes.visible = false;
+            finishWriting.visible = false;
+        }
+
         if (editMode) {
             text.visible = true;
             title.visible = true;
@@ -103,7 +113,6 @@ public class ScrollScreen extends HandledScreen<ScrollBlockScreenHandler> {
             viewTitle.setMessage(Text.of(title.getText()));
             titleText = "Reading Scroll...";
         }
-
     }
 
     @Override

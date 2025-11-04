@@ -19,8 +19,13 @@
   "display": {
     "description": "Place down a scroll that already contains writing.",
     "icon": {
+      "components": {
+        "minecraft:block_state": {
+          "written": "true"
+        }
+      },
       "count": 1,
-      "id": "wingcrafter:scroll_written_item"
+      "id": "wingcrafter:scroll"
     },
     "title": "Light Reading Material",
     "frame": "task",

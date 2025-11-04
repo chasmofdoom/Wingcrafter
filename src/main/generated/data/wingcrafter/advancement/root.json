@@ -9,8 +9,13 @@
     "background": "minecraft:gui/advancements/backgrounds/adventure",
     "description": "Welcome to Wingcrafter!",
     "icon": {
+      "components": {
+        "minecraft:block_state": {
+          "titled": "true"
+        }
+      },
       "count": 1,
-      "id": "wingcrafter:scroll_unwritten_item"
+      "id": "wingcrafter:scroll"
     },
     "show_toast": false,
     "title": "Wingcrafter"

@@ -1,63 +1,123 @@
 {
   "variants": {
-    "facing=east,rolled=false,written=false": {
+    "facing=east,rolled=false,written=false,sealed=false": {
       "model": "wingcrafter:block/scroll_unwritten",
       "y": 90
     },
-    "facing=north,rolled=false,written=false": {
+    "facing=north,rolled=false,written=false,sealed=false": {
       "model": "wingcrafter:block/scroll_unwritten"
     },
-    "facing=south,rolled=false,written=false": {
+    "facing=south,rolled=false,written=false,sealed=false": {
       "model": "wingcrafter:block/scroll_unwritten",
       "y": 180
     },
-    "facing=west,rolled=false,written=false": {
+    "facing=west,rolled=false,written=false,sealed=false": {
       "model": "wingcrafter:block/scroll_unwritten",
       "y": 270
     },
-    "facing=east,rolled=false,written=false,titled=true": {
+    "facing=east,rolled=false,written=false,titled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_titled",
       "y": 90
     },
-    "facing=north,rolled=false,written=false,titled=true": {
+    "facing=north,rolled=false,written=false,titled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_titled"
     },
-    "facing=south,rolled=false,written=false,titled=true": {
+    "facing=south,rolled=false,written=false,titled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_titled",
       "y": 180
     },
-    "facing=west,rolled=false,written=false,titled=true": {
+    "facing=west,rolled=false,written=false,titled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_titled",
       "y": 270
     },
-    "facing=east,rolled=false,written=true": {
+    "facing=east,rolled=false,written=true,sealed=false": {
       "model": "wingcrafter:block/scroll_written",
       "y": 90
     },
-    "facing=north,rolled=false,written=true": {
+    "facing=north,rolled=false,written=true,sealed=false": {
       "model": "wingcrafter:block/scroll_written"
     },
-    "facing=south,rolled=false,written=true": {
+    "facing=south,rolled=false,written=true,sealed=false": {
       "model": "wingcrafter:block/scroll_written",
       "y": 180
     },
-    "facing=west,rolled=false,written=true": {
+    "facing=west,rolled=false,written=true,sealed=false": {
       "model": "wingcrafter:block/scroll_written",
       "y": 270
     },
-    "facing=east,rolled=true": {
+    "facing=east,rolled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_rolled",
       "y": 90
     },
-    "facing=north,rolled=true": {
+    "facing=north,rolled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_rolled"
     },
-    "facing=south,rolled=true": {
+    "facing=south,rolled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_rolled",
       "y": 180
     },
-    "facing=west,rolled=true": {
+    "facing=west,rolled=true,sealed=false": {
       "model": "wingcrafter:block/scroll_rolled",
+      "y": 270
+    },
+    "facing=east,rolled=false,written=false,sealed=true": {
+      "model": "wingcrafter:block/scroll_unwritten_sealed",
+      "y": 90
+    },
+    "facing=north,rolled=false,written=false,sealed=true": {
+      "model": "wingcrafter:block/scroll_unwritten_sealed"
+    },
+    "facing=south,rolled=false,written=false,sealed=true": {
+      "model": "wingcrafter:block/scroll_unwritten_sealed",
+      "y": 180
+    },
+    "facing=west,rolled=false,written=false,sealed=true": {
+      "model": "wingcrafter:block/scroll_unwritten_sealed",
+      "y": 270
+    },
+    "facing=east,rolled=false,written=false,titled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_titled_sealed",
+      "y": 90
+    },
+    "facing=north,rolled=false,written=false,titled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_titled_sealed"
+    },
+    "facing=south,rolled=false,written=false,titled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_titled_sealed",
+      "y": 180
+    },
+    "facing=west,rolled=false,written=false,titled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_titled_sealed",
+      "y": 270
+    },
+    "facing=east,rolled=false,written=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_written_sealed",
+      "y": 90
+    },
+    "facing=north,rolled=false,written=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_written_sealed"
+    },
+    "facing=south,rolled=false,written=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_written_sealed",
+      "y": 180
+    },
+    "facing=west,rolled=false,written=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_written_sealed",
+      "y": 270
+    },
+    "facing=east,rolled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_rolled_sealed",
+      "y": 90
+    },
+    "facing=north,rolled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_rolled_sealed"
+    },
+    "facing=south,rolled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_rolled_sealed",
+      "y": 180
+    },
+    "facing=west,rolled=true,sealed=true": {
+      "model": "wingcrafter:block/scroll_rolled_sealed",
       "y": 270
     }
   }
