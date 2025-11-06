@@ -1,9 +1,16 @@
 package org.aussiebox.wingcrafter;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.condition.RandomChanceLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.block.ModBlockEntities;
 import org.aussiebox.wingcrafter.block.ModBlocks;
@@ -49,6 +56,15 @@ public class Wingcrafter implements ModInitializer {
                 }
 
                 Objects.requireNonNull(scrollBlockEntity.getWorld()).updateListeners(payload.pos(), scrollBlockEntity.getWorld().getBlockState(payload.pos()), scrollBlockEntity.getWorld().getBlockState(payload.pos()), Block.NOTIFY_LISTENERS);
+            }
+        });
+
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if (source.isBuiltin() && LootTables.ANCIENT_CITY_CHEST.equals(key)) {
+                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(ModItems.SOUL_SCROLL))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0F, 1.0F)))
+                        .conditionally(RandomChanceLootCondition.builder(0.025f));
+                tableBuilder.pool(poolBuilder);
             }
         });
 

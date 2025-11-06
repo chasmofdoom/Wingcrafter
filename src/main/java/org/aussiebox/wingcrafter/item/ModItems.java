@@ -27,6 +27,10 @@ public class ModItems {
     public static final Item SEAL = registerItem("seal", Item::new, new Item.Settings()
             .maxCount(32)
     );
+    public static final Item QUILL = registerItem("quill", Item::new, new Item.Settings()
+            .maxCount(1)
+            .maxDamage(64)
+    );
 
     public static final RegistryKey<ItemGroup> WINGCRAFTER_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(Wingcrafter.MOD_ID, "wingcrafter"));
     public static final ItemGroup WINGCRAFTER = FabricItemGroup.builder()
@@ -47,8 +51,10 @@ public class ModItems {
 
         Registry.register(Registries.ITEM_GROUP, WINGCRAFTER_KEY, WINGCRAFTER);
         ItemGroupEvents.modifyEntriesEvent(WINGCRAFTER_KEY).register(itemGroup -> {
+            itemGroup.add(ModBlocks.SCROLL.asItem());
             itemGroup.add(SOUL_SCROLL);
             itemGroup.add(SEAL);
+            itemGroup.add(QUILL);
         });
     }
 }

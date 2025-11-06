@@ -1,6 +1,7 @@
 {
   "itemGroup.wingcrafter.wingcrafter": "Wingcrafter",
   "block.wingcrafter.scroll": "Scroll",
-  "item.wingcrafter.soul_scroll": "Soul Scroll",
-  "item.wingcrafter.seal": "Seal"
+  "item.wingcrafter.soul_scroll": "§bSoul Scroll",
+  "item.wingcrafter.seal": "Seal",
+  "item.wingcrafter.quill": "Quill"
 }

@@ -52,7 +52,8 @@ public class ModBlocks {
         Wingcrafter.LOGGER.info("Registering mod blocks for " + Wingcrafter.MOD_ID);
 
         ItemGroupEvents.modifyEntriesEvent(ModItems.WINGCRAFTER_KEY).register((itemGroup) -> {
-            itemGroup.add(ModBlocks.SCROLL.asItem());
+            // itemGroup.add(ModBlocks.SCROLL.asItem());
+                // This is done in ModItems now.
         });
     }
 

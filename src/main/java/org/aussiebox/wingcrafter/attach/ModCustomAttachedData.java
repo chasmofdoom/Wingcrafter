@@ -15,22 +15,14 @@ public record ModCustomAttachedData(int soul) {
     public static ModCustomAttachedData DEFAULT = new ModCustomAttachedData(1000);
 
     public ModCustomAttachedData setSoul(int set) {
-            return new ModCustomAttachedData(set);
+            return new ModCustomAttachedData(Math.clamp(set, 0, 1000));
     }
 
     public ModCustomAttachedData addSoul(ModCustomAttachedData data, int add) {
-        if (data.soul() + add >= 1000) {
-            return new ModCustomAttachedData(1000);
-        } else {
-            return new ModCustomAttachedData(data.soul() + add);
-        }
+        return new ModCustomAttachedData(Math.clamp(data.soul() + add, 0, 1000));
     }
 
     public ModCustomAttachedData removeSoul(ModCustomAttachedData data, int remove) {
-        if (data.soul() - remove <= 0) {
-            return new ModCustomAttachedData(0);
-        } else {
-            return new ModCustomAttachedData(data.soul() - remove);
-        }
+        return new ModCustomAttachedData(Math.clamp(data.soul() - remove, 0, 1000));
     }
 }

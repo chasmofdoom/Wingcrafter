@@ -43,33 +43,47 @@
     ],
     "fallback": {
       "type": "minecraft:select",
-      "block_state_property": "written",
+      "block_state_property": "sealed",
       "cases": [
         {
           "model": {
             "type": "minecraft:model",
-            "model": "wingcrafter:item/scroll_written_item"
+            "model": "wingcrafter:item/scroll_sealed_item"
           },
           "when": "true"
         }
       ],
       "fallback": {
         "type": "minecraft:select",
-        "property": "minecraft:block_state",
-        "block_state_property": "titled",
+        "block_state_property": "written",
         "cases": [
           {
-            "when": "true",
             "model": {
               "type": "minecraft:model",
-              "model": "wingcrafter:item/scroll_titled_item"
-            }
+              "model": "wingcrafter:item/scroll_written_item"
+            },
+            "when": "true"
           }
         ],
         "fallback": {
-          "type": "minecraft:model",
-          "model": "wingcrafter:item/scroll_unwritten_item"
-        }
+          "type": "minecraft:select",
+          "property": "minecraft:block_state",
+          "block_state_property": "titled",
+          "cases": [
+            {
+              "when": "true",
+              "model": {
+                "type": "minecraft:model",
+                "model": "wingcrafter:item/scroll_titled_item"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "wingcrafter:item/scroll_unwritten_item"
+          }
+        },
+        "property": "minecraft:block_state"
       },
       "property": "minecraft:block_state"
     },
