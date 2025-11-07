@@ -3,8 +3,8 @@
   "id": "wingcrafter",
   "version": "${version}",
   "name": "Wingcrafter",
-  "description": "wof in minecraft yayyyy",
-  "authors": [],
+  "description": "Bring the world of Wings of Fire into Minecraft, with many interactive and exciting features!",
+  "authors": ["AussieBox/Stargazer"],
   "contact": {},
   "license": "MIT",
   "icon": "assets/wingcrafter/icon.png",
@@ -19,6 +19,9 @@
     ],
     "fabric-datagen": [
       "org.aussiebox.wingcrafter.client.WingcrafterClient"
+    ],
+    "modmenu": [
+      "org.aussiebox.wingcrafter.config.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -27,6 +30,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "yet_another_config_lib_v3": ">=3.8.0+1.21.9-fabric"
   }
 }

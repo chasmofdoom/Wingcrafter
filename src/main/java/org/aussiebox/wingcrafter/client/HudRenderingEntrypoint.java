@@ -1,6 +1,7 @@
 package org.aussiebox.wingcrafter.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,6 +10,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.BlockStateComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -20,10 +23,22 @@ import net.minecraft.world.World;
 import org.aussiebox.wingcrafter.Wingcrafter;
 import org.aussiebox.wingcrafter.attach.ModAttachmentTypes;
 import org.aussiebox.wingcrafter.attach.ModCustomAttachedData;
+import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
+import org.aussiebox.wingcrafter.config.ClientConfig;
 import org.aussiebox.wingcrafter.item.ModItems;
+import org.aussiebox.wingcrafter.network.SoulKillPayload;
+
+import java.lang.reflect.Array;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.aussiebox.wingcrafter.block.custom.ScrollBlock.TITLED;
+import static org.aussiebox.wingcrafter.block.custom.ScrollBlock.WRITTEN;
 
 public class HudRenderingEntrypoint implements ClientModInitializer {
+    static int warningColorT;
+    static int warningColorO;
     static Text scrollTitle = Text.of("Untitled Scroll");
     static Text scrollLineCountText = Text.of("Line Count: N/A");
     static Text changeText = Text.of("idk bro 🥀");
@@ -37,7 +52,14 @@ public class HudRenderingEntrypoint implements ClientModInitializer {
     static int warningFadeIn;
     static int warningFadeOut;
     static int lastSoul;
+    static int soulDeathTimer = 170;
     static boolean lastVisibility = false;
+
+    static String[] soulWarning750 = {"I feel cold.", "My talons are shaking.", "I don't feel very good."};
+    static String[] soulWarning500 = {"Something feels different.", "What's happening to me?", "Am I alright?"};
+    static String[] soulWarning250 = {"Something just slithered over my grave.", "Is there any turning back?", "Will I survive this eternal pain?", "Reality is shifting in and out of focus."};
+    static String[] soulWarning100 = {"My magic reclaims me."};
+    static String[] soulWarning0 = {"My soul will rise to the sky, never to return.", "I am to be remembered forever.", "Whatever rises must eventually fall."};
 
     public static final Identifier BACKGROUND = Identifier.of(Wingcrafter.MOD_ID, "textures/soul/background.png");
     public static final Identifier PROGRESS = Identifier.of(Wingcrafter.MOD_ID, "textures/soul/progress.png");
@@ -85,44 +107,92 @@ public class HudRenderingEntrypoint implements ClientModInitializer {
                     71,
                     8
             );
-            if (soul > lastSoul) {
-                if (changeFadeIn == 0 && changeTime == 0 && changeFadeOut == 0) {
-                    change = soul - lastSoul;
-                    changeFadeIn = 20;
-                    changeTime = 40;
-                    changeFadeOut = 20;
-                } else {
-                    change -= lastSoul - soul;
-                    changeTime = 40;
-                    changeFadeOut = 20;
-                }
-            } else if (soul < lastSoul) {
-                if (changeFadeIn == 0 && changeTime == 0 && changeFadeOut == 0) {
-                    change = soul - lastSoul;
-                    changeFadeIn = 20;
-                    changeTime = 40;
-                    changeFadeOut = 20;
-                } else {
-                    change += soul - lastSoul;
-                    changeTime = 40;
-                    changeFadeOut = 20;
+
+            if (ClientConfig.displaySoulChanges) {
+                if (soul > lastSoul) {
+                    if (changeFadeIn == 0 && changeTime == 0 && changeFadeOut == 0) {
+                        change = soul - lastSoul;
+                        changeFadeIn = 20;
+                        changeTime = 40;
+                        changeFadeOut = 20;
+                    } else {
+                        change -= lastSoul - soul;
+                        changeTime = 40;
+                        changeFadeOut = 20;
+                    }
+                } else if (soul < lastSoul) {
+                    if (changeFadeIn == 0 && changeTime == 0 && changeFadeOut == 0) {
+                        change = soul - lastSoul;
+                        changeFadeIn = 20;
+                        changeTime = 40;
+                        changeFadeOut = 20;
+                    } else {
+                        change += soul - lastSoul;
+                        changeTime = 40;
+                        changeFadeOut = 20;
+                    }
                 }
             }
 
-            if (soul <= 500 && lastSoul > 500) {
-                if (warningFadeIn == 0 && warningTime == 0 && warningFadeOut == 0) {
-                    warningText = Text.literal("I feel cold.");
-                    warningFadeIn = 20;
-                    warningTime = 80;
-                    warningFadeOut = 20;
+            if (ClientConfig.displaySoulDialogue) {
+                if (soul <= 750 && lastSoul > 750) {
+                    if (warningFadeIn == 0 && warningTime == 0 && warningFadeOut == 0) {
+                        warningText = Text.literal((String) Array.get(soulWarning750, ThreadLocalRandom.current().nextInt(0, soulWarning750.length)));
+                        warningColorT = 0x00FFFFFF;
+                        warningColorO = 0xFFFFFFFF;
+                        warningFadeIn = 20;
+                        warningTime = 80;
+                        warningFadeOut = 20;
+                    }
+                }
+                if (soul <= 500 && lastSoul > 500) {
+                    if (warningFadeIn == 0 && warningTime == 0 && warningFadeOut == 0) {
+                        warningText = Text.literal((String) Array.get(soulWarning500, ThreadLocalRandom.current().nextInt(0, soulWarning500.length)));
+                        warningColorT = 0x00FFFFFF;
+                        warningColorO = 0xFFFFFFFF;
+                        warningFadeIn = 20;
+                        warningTime = 80;
+                        warningFadeOut = 20;
+                    }
+                }
+                if (soul <= 250 && lastSoul > 250) {
+                    if (warningFadeIn == 0 && warningTime == 0 && warningFadeOut == 0) {
+                        warningText = Text.literal((String) Array.get(soulWarning250, ThreadLocalRandom.current().nextInt(0, soulWarning250.length)));
+                        warningColorT = 0x00FFFFFF;
+                        warningColorO = 0xFFFFFFFF;
+                        warningFadeIn = 20;
+                        warningTime = 80;
+                        warningFadeOut = 20;
+                    }
+                }
+                if (soul <= 100 && lastSoul > 100) {
+                    if (warningFadeIn == 0 && warningTime == 0 && warningFadeOut == 0) {
+                        warningText = Text.literal((String) Array.get(soulWarning100, ThreadLocalRandom.current().nextInt(0, soulWarning100.length)));
+                        warningColorT = 0x00FFFFFF;
+                        warningColorO = 0xFFFFFFFF;
+                        warningFadeIn = 20;
+                        warningTime = 100;
+                        warningFadeOut = 20;
+                    }
+                }
+                if (soul <= 0 && lastSoul > 0) {
+                    if (warningFadeIn == 0 && warningTime == 0 && warningFadeOut == 0) {
+                        warningText = Text.literal((String) Array.get(soulWarning0, ThreadLocalRandom.current().nextInt(0, soulWarning0.length)));
+                        warningColorT = 0x00FF5C5C;
+                        warningColorO = 0xFFFF5C5C;
+                        warningFadeIn = 20;
+                        warningTime = 120;
+                        warningFadeOut = 20;
+                        soulDeathTimer = 170;
+                    }
                 }
             }
 
             int changeX = (int) ((int) ((double) width/2+12.5) - ((double) textRenderer.getWidth(changeText) / 2) + 37.5);
-            int changeY = (int) ((double) height-55) - 10;
+            int changeY = (int) ((double) height-55) - 10 + ClientConfig.soulChangeYModifier;
 
             int warningX = width/2 - (textRenderer.getWidth(warningText) / 2);
-            int warningY = height/10*7 - (textRenderer.fontHeight / 2);
+            int warningY = height/10*7 - (textRenderer.fontHeight / 2) + ClientConfig.soulDialogueYModifier;
 
             if (change >= 0) {
                 changeText = Text.of("+" + change);
@@ -146,14 +216,21 @@ public class HudRenderingEntrypoint implements ClientModInitializer {
             }
 
             if (warningFadeIn > 0) {
-                context.drawText(textRenderer, warningText, warningX, warningY + (warningFadeIn/2), ColorHelper.lerp((float) (1.0-((double) warningFadeIn / 20)), 0x00FFFFFF, 0xFFFFFFFF), true);
+                context.drawText(textRenderer, warningText, warningX, warningY + (warningFadeIn/2), ColorHelper.lerp((float) (1.0-((double) warningFadeIn / 20)), warningColorT, warningColorO), true);
                 warningFadeIn--;
             } else if (warningTime > 0) {
-                context.drawText(textRenderer, warningText, warningX, warningY, 0xFFFFFFFF, true);
+                context.drawText(textRenderer, warningText, warningX, warningY, warningColorO, true);
                 warningTime--;
             } else if (warningFadeOut > 0) {
-                context.drawText(textRenderer, warningText, warningX, warningY + (warningFadeOut/2) - 10, ColorHelper.lerp((float) (1.0-((double) warningFadeOut / 20)), 0xFFFFFFFF, 0x00FFFFFF), true);
+                context.drawText(textRenderer, warningText, warningX, warningY + (warningFadeOut/2) - 10, ColorHelper.lerp((float) (1.0-((double) warningFadeOut / 20)), warningColorO, warningColorT), true);
                 warningFadeOut--;
+            }
+
+            if (soul <= 0 && soulDeathTimer <= 0) {
+                SoulKillPayload payload = new SoulKillPayload(player.getUuidAsString());
+                ClientPlayNetworking.send(payload);
+            } else if (soul <= 0) {
+                soulDeathTimer--;
             }
 
             // Somehow, adding the "change" rendering system took me longer than the soul bar itself.
@@ -174,27 +251,62 @@ public class HudRenderingEntrypoint implements ClientModInitializer {
         int width = context.getScaledWindowWidth();
         int height = context.getScaledWindowHeight();
 
+        Text duplicateText = Text.literal("[RC] Duplicate Scroll");
+        Text offhandScrollText = Text.literal("Place a scroll in your offhand.");
+        Text unwrittenScrollText = Text.literal("Offhanded scroll must be empty.");
+
         int scrollTitleX = width/2 - (textRenderer.getWidth(scrollTitle)/2);
         int scrollTitleY = height/2 - (textRenderer.fontHeight/2) + 15;
 
+        int scrollDuplicateX = width/2 - (textRenderer.getWidth(duplicateText)/2);
+        int offhandScrollX = width/2 - (textRenderer.getWidth(offhandScrollText)/2);
+        int unwrittenScrollX = width/2 - (textRenderer.getWidth(unwrittenScrollText)/2);
+
         int scrollLineCountX = width/2 - (textRenderer.getWidth(scrollLineCountText)/2);
 
-        HitResult hitResult = MinecraftClient.getInstance().crosshairTarget;
+            HitResult hitResult = MinecraftClient.getInstance().crosshairTarget;
 
-        if (hitResult != null) {
-            if (hitResult.getType() == HitResult.Type.BLOCK) {
-                World world = player.getEntityWorld();
-                if (world != null) {
-                    BlockEntity blockEntity = world.getBlockEntity(BlockPos.ofFloored(hitResult.getPos()));
-                    if (blockEntity instanceof ScrollBlockEntity scrollBlockEntity) {
-                        scrollTitle = Text.of("\"" + scrollBlockEntity.getTitle() + "\"");
-                        scrollLineCount = (int) scrollBlockEntity.getText().lines().count();
-                        scrollLineCountText = Text.of("Line Count: " + scrollLineCount);
-                        context.drawText(textRenderer, scrollTitle, scrollTitleX, scrollTitleY, 0xFFFFFFFF, true);
-                        context.drawText(textRenderer, scrollLineCountText, scrollLineCountX, scrollTitleY + 11, 0xFFAAAAAA, true);
+            if (hitResult != null) {
+                if (hitResult.getType() == HitResult.Type.BLOCK) {
+                    World world = player.getEntityWorld();
+                    if (world != null) {
+                        BlockEntity blockEntity = world.getBlockEntity(BlockPos.ofFloored(hitResult.getPos()));
+                        ItemStack offhand = player.getOffHandStack();
+                        BlockStateComponent offhandData = offhand.get(DataComponentTypes.BLOCK_STATE);
+                        if (blockEntity instanceof ScrollBlockEntity scrollBlockEntity) {
+                            if (player.getMainHandStack().isOf(ModItems.QUILL)) {
+                                if (player.getOffHandStack().isOf(ModBlocks.SCROLL.asItem())) {
+                                    if (offhandData != null && Boolean.FALSE.equals(offhandData.getValue(WRITTEN)) && Boolean.FALSE.equals(offhandData.getValue(TITLED))) {
+                                        context.drawText(textRenderer, duplicateText, scrollDuplicateX, scrollTitleY - 30, 0xFFFFFFFF, true);
+                                    } else {
+                                        context.drawText(textRenderer, unwrittenScrollText, unwrittenScrollX, scrollTitleY - 30, 0xFFAAAAAA, true);
+                                        context.drawText(textRenderer, duplicateText, scrollDuplicateX, scrollTitleY - 41, 0xFF555555, true);
+                                    }
+                                } else {
+                                        context.drawText(textRenderer, offhandScrollText, offhandScrollX, scrollTitleY - 30, 0xFFAAAAAA, true);
+                                        context.drawText(textRenderer, duplicateText, scrollDuplicateX, scrollTitleY - 41, 0xFF555555, true);
+                                }
+                            }
+
+                            if (player.isSneaking()) {
+                                scrollTitle = Text.of("\"" + scrollBlockEntity.getTitle() + "\"");
+                                scrollLineCount = (int) scrollBlockEntity.getText().lines().count();
+                                scrollLineCountText = Text.of("Line Count: " + scrollLineCount);
+
+                                if (Objects.equals(scrollBlockEntity.getTitle(), "")) {
+                                    scrollTitle = Text.of("Unnamed Scroll");
+                                }
+                                if (Objects.equals(scrollBlockEntity.getTitle(), "") && Objects.equals(scrollBlockEntity.getText(), "")) {
+                                    scrollTitle = Text.of("Empty Scroll");
+                                    scrollLineCountText = Text.empty();
+                                }
+
+                                context.drawText(textRenderer, scrollTitle, scrollTitleX, scrollTitleY, 0xFFFFFFFF, true);
+                                context.drawText(textRenderer, scrollLineCountText, scrollLineCountX, scrollTitleY + 11, 0xFFAAAAAA, true);
+                            }
+                        }
                     }
                 }
             }
-        }
     }
 }

@@ -5,13 +5,20 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import org.aussiebox.wingcrafter.block.ModBlockEntities;
 import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
@@ -19,6 +26,7 @@ import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
 import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
 import org.aussiebox.wingcrafter.item.ModItems;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
+import org.aussiebox.wingcrafter.network.SoulKillPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +67,22 @@ public class Wingcrafter implements ModInitializer {
             }
         });
 
+        PayloadTypeRegistry.playC2S().register(SoulKillPayload.ID, SoulKillPayload.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(SoulKillPayload.ID, (payload, context) -> {
+            PlayerEntity player = context.player();
+
+            World world = player.getEntityWorld();
+
+            RegistryKey<DamageType> SOUL_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(Wingcrafter.MOD_ID, "soul"));
+            DamageSource damageSource = new DamageSource(
+                    world.getRegistryManager()
+                            .getOrThrow(RegistryKeys.DAMAGE_TYPE)
+                            .getEntry(SOUL_DAMAGE.getValue()).get()
+            );
+
+            player.damage((ServerWorld) world, damageSource, 1337);
+        });
+
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             if (source.isBuiltin() && LootTables.ANCIENT_CITY_CHEST.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(ModItems.SOUL_SCROLL))
@@ -73,6 +97,5 @@ public class Wingcrafter implements ModInitializer {
         ModBlockEntities.registerModBlockEntities();
         ModDataComponentTypes.registerDataComponentTypes();
         ModBlocks.registerModBlocks();
-
     }
 }

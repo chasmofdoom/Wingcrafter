@@ -3,5 +3,23 @@
   "block.wingcrafter.scroll": "Scroll",
   "item.wingcrafter.soul_scroll": "§bSoul Scroll",
   "item.wingcrafter.seal": "Seal",
-  "item.wingcrafter.quill": "Quill"
+  "item.wingcrafter.quill": "Quill",
+  "death.attack.soul": "%1$s yearned for more power than they could handle",
+
+  "wingcrafter.config.client.tab.rendering": "Rendering",
+  "wingcrafter.config.client.tab.rendering.tooltip": "Configure rendering-related Wingcrafter features.",
+
+  "wingcrafter.config.client.rendering.group.soul_change": "Soul Change",
+  "wingcrafter.config.client.rendering.group.soul_change.tooltip": "Configure how the Soul change notifier renders.",
+  "wingcrafter.config.client.rendering.soul_change.render": "Render Text",
+  "wingcrafter.config.client.rendering.soul_change.render.tooltip": "Whether the mod should render the Soul change notifier.",
+  "wingcrafter.config.client.rendering.soul_change.y_modifier": "Y Modifier",
+  "wingcrafter.config.client.rendering.soul_change.y_modifier.tooltip": "The number of pixels (on the Y axis) that the Soul change text is shifted.",
+
+  "wingcrafter.config.client.rendering.group.soul_dialogue": "Soul Dialogue",
+  "wingcrafter.config.client.rendering.group.soul_dialogue.tooltip": "Configure how Soul dialogue renders.",
+  "wingcrafter.config.client.rendering.soul_dialogue.render": "Render Dialogue",
+  "wingcrafter.config.client.rendering.soul_dialogue.render.tooltip": "Whether the mod should render the Soul dialogue lines.",
+  "wingcrafter.config.client.rendering.soul_dialogue.y_modifier": "Y Modifier",
+  "wingcrafter.config.client.rendering.soul_dialogue.y_modifier.tooltip": "The number of pixels (on the Y axis) that the Soul dialogue lines are shifted."
 }
