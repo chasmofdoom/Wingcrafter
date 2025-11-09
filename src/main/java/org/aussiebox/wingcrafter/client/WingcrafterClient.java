@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
 import org.aussiebox.wingcrafter.client.screen.ScrollScreen;
+import org.aussiebox.wingcrafter.client.screen.SoulScrollSpellSelectScreen;
 import org.aussiebox.wingcrafter.config.ClientConfig;
 import org.aussiebox.wingcrafter.datagen.AdvancementProvider;
 import org.aussiebox.wingcrafter.datagen.ModelProvider;
@@ -24,6 +25,7 @@ public class WingcrafterClient implements ClientModInitializer, DataGeneratorEnt
     @Override
     public void onInitializeClient() {
         HandledScreens.register(ScreenHandlerTypeInit.SCROLL, ScrollScreen::new);
+        HandledScreens.register(ScreenHandlerTypeInit.SOUL_SCROLL_SPELL_SELECT, SoulScrollSpellSelectScreen::new);
         ClientConfig.HANDLER.load();
 
         KeyBinding spell1Keybind;

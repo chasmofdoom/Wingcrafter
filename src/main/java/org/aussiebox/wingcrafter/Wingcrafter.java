@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
@@ -23,10 +24,12 @@ import org.aussiebox.wingcrafter.block.ModBlockEntities;
 import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
 import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
+import org.aussiebox.wingcrafter.component.SoulScrollSpells;
 import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
 import org.aussiebox.wingcrafter.item.ModItems;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
 import org.aussiebox.wingcrafter.network.SoulKillPayload;
+import org.aussiebox.wingcrafter.network.UpdateSoulScrollDataPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +84,17 @@ public class Wingcrafter implements ModInitializer {
             );
 
             player.damage((ServerWorld) world, damageSource, 1337);
+        });
+
+        PayloadTypeRegistry.playC2S().register(UpdateSoulScrollDataPayload.ID, UpdateSoulScrollDataPayload.PACKET_CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateSoulScrollDataPayload.ID, (payload, context) -> {
+            PlayerEntity player = context.player();
+            ItemStack itemStack = payload.itemStack();
+            int slot = player.getInventory().getSlotWithStack(payload.itemStack());
+
+            itemStack.set(ModDataComponentTypes.SOUL_SCROLL_SPELLS, new SoulScrollSpells(payload.spell1(), payload.spell2(), payload.spell3()));
+            player.getInventory().setStack(slot, itemStack);
+            player.getInventory().markDirty();
         });
 
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {

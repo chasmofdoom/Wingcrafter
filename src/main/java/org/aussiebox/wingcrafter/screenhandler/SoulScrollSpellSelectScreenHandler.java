@@ -8,15 +8,21 @@ import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
 import org.aussiebox.wingcrafter.network.SoulScrollDataPayload;
 
 public class SoulScrollSpellSelectScreenHandler extends ScreenHandler {
-    private String spell1;
-    private String spell2;
-    private String spell3;
+    public String spell1;
+    public String spell2;
+    public String spell3;
+    public ItemStack itemStack;
 
     public SoulScrollSpellSelectScreenHandler(int syncId, PlayerInventory playerInventory, SoulScrollDataPayload payload) {
-        super(ScreenHandlerTypeInit.SOUL_SCROLL_SPELL_SELECT, syncId);
+        this(syncId, playerInventory, payload.itemStack());
         this.spell1 = payload.spell1();
         this.spell2 = payload.spell2();
         this.spell3 = payload.spell3();
+        this.itemStack = payload.itemStack();
+    }
+
+    public SoulScrollSpellSelectScreenHandler(int syncId, PlayerInventory playerInventory, ItemStack itemStack) {
+        super(ScreenHandlerTypeInit.SOUL_SCROLL_SPELL_SELECT, syncId);
     }
 
     @Override
@@ -26,6 +32,6 @@ public class SoulScrollSpellSelectScreenHandler extends ScreenHandler {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return false;
+        return true;
     }
 }

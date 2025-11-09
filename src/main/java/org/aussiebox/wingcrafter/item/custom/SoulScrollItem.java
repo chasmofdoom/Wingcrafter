@@ -30,8 +30,9 @@ public class SoulScrollItem extends Item implements ExtendedScreenHandlerFactory
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        super.use(world, user, hand);
         user.openHandledScreen(this);
-        return super.use(world, user, hand);
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -53,24 +54,21 @@ public class SoulScrollItem extends Item implements ExtendedScreenHandlerFactory
     public SoulScrollDataPayload getScreenOpeningData(ServerPlayerEntity serverPlayerEntity) {
         ItemStack itemStack = serverPlayerEntity.getInventory().getSelectedStack();
         if (itemStack.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS) == null) {
-            itemStack.set(ModDataComponentTypes.SOUL_SCROLL_SPELLS, new SoulScrollSpells(null, null, null));
+            itemStack.set(ModDataComponentTypes.SOUL_SCROLL_SPELLS, new SoulScrollSpells("none", "none", "none"));
             serverPlayerEntity.getInventory().markDirty();
         }
         SoulScrollSpells spells = itemStack.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS);
 
-        assert spells != null;
         return new SoulScrollDataPayload(itemStack, spells.spell1(), spells.spell2(), spells.spell3());
     }
 
     @Override
     public Text getDisplayName() {
-        return null;
+        return Text.empty();
     }
 
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        ItemStack itemStack = playerInventory.getSelectedStack();
-        SoulScrollSpells spells = itemStack.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS);
-        return new SoulScrollSpellSelectScreenHandler(syncId, playerInventory, new SoulScrollDataPayload(itemStack, spells.spell1(), spells.spell2(), spells.spell3()));
+        return new SoulScrollSpellSelectScreenHandler(syncId, playerInventory, this.getDefaultStack());
     }
 }

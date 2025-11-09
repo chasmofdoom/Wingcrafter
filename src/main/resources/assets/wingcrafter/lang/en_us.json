@@ -8,6 +8,12 @@
   "item.wingcrafter.soul_scroll.tooltip.3": "Its power allows the bearer to cast Animus spells.",
   "item.wingcrafter.tooltip.spell_caster": "This item can cast potentially dangerous spells.",
   "item.wingcrafter.soul_scroll.tooltip.owner": "Rightfully Owned By: ",
+  "item.wingcrafter.soul_scroll.tooltip.spell1": "Spell 1: ",
+  "item.wingcrafter.soul_scroll.tooltip.spell2": "Spell 2: ",
+  "item.wingcrafter.soul_scroll.tooltip.spell3": "Spell 3: ",
+
+  "spell.wingcrafter.frostbeam": "Frostbeam",
+  "spell.wingcrafter.skyShield": "Sky Shield",
 
   "item.wingcrafter.seal": "Seal",
 

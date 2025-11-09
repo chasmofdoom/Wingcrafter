@@ -17,8 +17,10 @@ import net.minecraft.util.Rarity;
 import org.aussiebox.wingcrafter.Wingcrafter;
 import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
+import org.aussiebox.wingcrafter.component.SoulScrollSpells;
 import org.aussiebox.wingcrafter.item.custom.SoulScrollItem;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public class ModItems {
@@ -76,15 +78,33 @@ public class ModItems {
                 list.add(2, Text.translatable("item.wingcrafter.soul_scroll.tooltip.2").withColor(0xFFAAAAAA));
                 list.add(3, Text.empty());
                 list.add(4, Text.translatable("item.wingcrafter.soul_scroll.tooltip.3").withColor(0xFFAAAAAA));
-                if (MinecraftClient.getInstance().options.advancedItemTooltips) {
-                    list.add(list.size()-2, Text.translatable("item.wingcrafter.tooltip.spell_caster").withColor(0xFF555555));
-                }
                 if (itemStack.contains(ModDataComponentTypes.SOUL_SCROLL_OWNER)) {
                     String ownerName = itemStack.get(ModDataComponentTypes.SOUL_SCROLL_OWNER_NAME);
                     if (ownerName != null) {
                         list.add(1, Text.translatable("item.wingcrafter.soul_scroll.tooltip.owner").withColor(0xFFAAAAAA).append(Text.literal(ownerName).withColor(0xFFFFFFFF)));
                         list.add(2, Text.empty());
                     }
+                }
+                if (itemStack.contains(ModDataComponentTypes.SOUL_SCROLL_SPELLS)) {
+                    SoulScrollSpells spells = itemStack.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS);
+                    if (!Objects.equals(spells.spell1(), "none") || !Objects.equals(spells.spell2(), "none") || !Objects.equals(spells.spell3(), "none")) {
+                        list.add(3, Text.empty());
+                    }
+                    if (!Objects.equals(spells.spell3(), "none")) {
+                        list.add(3, Text.translatable("item.wingcrafter.soul_scroll.tooltip.spell3").withColor(0xFFFFFFFF)
+                                .append(Text.translatable("spell.wingcrafter." + spells.spell3()).withColor(0xFF55FFFF)));
+                    }
+                    if (!Objects.equals(spells.spell2(), "none")) {
+                        list.add(3, Text.translatable("item.wingcrafter.soul_scroll.tooltip.spell2").withColor(0xFFFFFFFF)
+                                .append(Text.translatable("spell.wingcrafter." + spells.spell2()).withColor(0xFF55FFFF)));
+                    }
+                    if (!Objects.equals(spells.spell1(), "none")) {
+                        list.add(3, Text.translatable("item.wingcrafter.soul_scroll.tooltip.spell1").withColor(0xFFFFFFFF)
+                                .append(Text.translatable("spell.wingcrafter." + spells.spell1()).withColor(0xFF55FFFF)));
+                    }
+                }
+                if (MinecraftClient.getInstance().options.advancedItemTooltips) {
+                    list.add(list.size()-2, Text.translatable("item.wingcrafter.tooltip.spell_caster").withColor(0xFF555555));
                 }
             }
         });
