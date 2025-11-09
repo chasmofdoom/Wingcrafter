@@ -54,15 +54,19 @@ public class SoulScrollSpellSelectScreen extends HandledScreen<SoulScrollSpellSe
         selectedSlot = 3;
     });
 
+    // -[ SPELL BUTTONS]- //
+
     ButtonTextures frostbeamSpellTexture = new ButtonTextures(Identifier.of("wingcrafter:soul_scroll/spells/frostbeam"));
-    TexturedButtonWidget frostbeamSpell = new TexturedButtonWidget(screenWidth/10*5-32, screenHeight/10+60, 32, 32, frostbeamSpellTexture, (btn) -> {
+    TexturedButtonWidget frostbeamSpell = new TexturedButtonWidget(screenWidth/10*5-36, screenHeight/10+60, 32, 32, frostbeamSpellTexture, (btn) -> {
         selectedSpells[selectedSlot-1] = "frostbeam";
     });
 
     ButtonTextures skyShieldSpellTexture = new ButtonTextures(Identifier.of("wingcrafter:soul_scroll/spells/frostbeam"));
-    TexturedButtonWidget skyShieldSpell = new TexturedButtonWidget(screenWidth/10*5+16, screenHeight/10+60, 32, 32, frostbeamSpellTexture, (btn) -> {
+    TexturedButtonWidget skyShieldSpell = new TexturedButtonWidget(screenWidth/10*5+4, screenHeight/10+60, 32, 32, frostbeamSpellTexture, (btn) -> {
         selectedSpells[selectedSlot-1] = "skyShield";
     });
+
+    // -[SPELL INFORMATION]- //
 
     TexturedButtonWidget[] spells = {
             frostbeamSpell,

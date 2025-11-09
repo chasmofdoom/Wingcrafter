@@ -27,9 +27,11 @@ import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
 import org.aussiebox.wingcrafter.component.SoulScrollSpells;
 import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
 import org.aussiebox.wingcrafter.item.ModItems;
+import org.aussiebox.wingcrafter.network.CastSpellPayload;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
 import org.aussiebox.wingcrafter.network.SoulKillPayload;
 import org.aussiebox.wingcrafter.network.UpdateSoulScrollDataPayload;
+import org.aussiebox.wingcrafter.spells.Spells;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,6 +97,11 @@ public class Wingcrafter implements ModInitializer {
             itemStack.set(ModDataComponentTypes.SOUL_SCROLL_SPELLS, new SoulScrollSpells(payload.spell1(), payload.spell2(), payload.spell3()));
             player.getInventory().setStack(slot, itemStack);
             player.getInventory().markDirty();
+        });
+
+        PayloadTypeRegistry.playC2S().register(CastSpellPayload.ID, CastSpellPayload.PACKET_CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(CastSpellPayload.ID, (payload, context) -> {
+            Spells.cast(payload.spellID(), context.player());
         });
 
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
