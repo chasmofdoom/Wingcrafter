@@ -12,6 +12,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
+import org.aussiebox.wingcrafter.block.custom.FireglobeBlock;
 import org.aussiebox.wingcrafter.block.custom.ScrollBlock;
 import org.aussiebox.wingcrafter.item.ModItems;
 
@@ -23,6 +24,13 @@ public class ModBlocks {
             "scroll",
             ScrollBlock::new,
             AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD).nonOpaque(),
+            true
+    );
+
+    public static final Block FIREGLOBE = register(
+            "fireglobe",
+            FireglobeBlock::new,
+            AbstractBlock.Settings.create().sounds(BlockSoundGroup.LANTERN).nonOpaque(),
             true
     );
 

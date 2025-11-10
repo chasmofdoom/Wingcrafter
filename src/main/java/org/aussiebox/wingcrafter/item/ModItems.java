@@ -64,6 +64,7 @@ public class ModItems {
             itemGroup.add(SOUL_SCROLL);
             itemGroup.add(SEAL);
             itemGroup.add(QUILL);
+            itemGroup.add(ModBlocks.FIREGLOBE.asItem());
         });
 
         ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {

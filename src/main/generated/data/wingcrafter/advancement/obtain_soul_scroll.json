@@ -1,0 +1,33 @@
+{
+  "parent": "wingcrafter:root",
+  "criteria": {
+    "obtain_soul_scroll": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "wingcrafter:soul_scroll"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "description": "Risk your life for unimaginable power",
+    "icon": {
+      "count": 1,
+      "id": "wingcrafter:soul_scroll"
+    },
+    "title": "Soul Survivor",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "requirements": [
+    [
+      "obtain_soul_scroll"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

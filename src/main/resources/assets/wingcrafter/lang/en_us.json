@@ -1,6 +1,7 @@
 {
   "itemGroup.wingcrafter.wingcrafter": "Wingcrafter",
   "block.wingcrafter.scroll": "Scroll",
+  "block.wingcrafter.fireglobe": "Fireglobe",
 
   "item.wingcrafter.soul_scroll": "§bSoul Scroll",
   "item.wingcrafter.soul_scroll.tooltip.1": "A powerful piece of parchment, hidden away from",
@@ -13,7 +14,7 @@
   "item.wingcrafter.soul_scroll.tooltip.spell3": "Spell 3: ",
 
   "spell.wingcrafter.frostbeam": "Frostbeam",
-  "spell.wingcrafter.skyShield": "Sky Shield",
+  "spell.wingcrafter.flamethrower": "Flamethrower",
 
   "item.wingcrafter.seal": "Seal",
 
@@ -28,6 +29,13 @@
   "key.wingcrafter.spell3": "Cast Spell In Third Slot",
 
   "death.attack.soul": "%1$s yearned for more power than they could handle",
+
+  "effect.wingcrafter.freeze": "Freeze",
+  "effect.wingcrafter.flamebreath": "Flamebreath",
+  "effect.wingcrafter.soul_decay": "Soul Decay",
+
+  "tag.item.wingcrafter.animus_spell_casters": "Animus Spell Casters",
+  "tag.item.wingcrafter.stained_glass_panes": "Stained Glass Panes",
 
   "wingcrafter.config.client.tab.rendering": "Rendering",
   "wingcrafter.config.client.tab.rendering.tooltip": "Configure rendering-related Wingcrafter features.",

@@ -5,14 +5,17 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
+import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.client.screen.ScrollScreen;
 import org.aussiebox.wingcrafter.client.screen.SoulScrollSpellSelectScreen;
 import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
@@ -67,7 +70,7 @@ public class WingcrafterClient implements ClientModInitializer, DataGeneratorEnt
                 while (spell1Keybind.wasPressed()) {
                     if (soulScroll.isOf(ModItems.SOUL_SCROLL)) {
                         SoulScrollSpells spells = soulScroll.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS);
-                        if (spells.spell1() != null) {
+                        if (spells.spell1() != null && !spells.spell1().equals("none")) {
                             CastSpellPayload payload = new CastSpellPayload(spells.spell1());
                             ClientPlayNetworking.send(payload);
                         }
@@ -76,7 +79,7 @@ public class WingcrafterClient implements ClientModInitializer, DataGeneratorEnt
                 while (spell2Keybind.wasPressed()) {
                     if (soulScroll.isOf(ModItems.SOUL_SCROLL)) {
                         SoulScrollSpells spells = soulScroll.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS);
-                        if (spells.spell2() != null) {
+                        if (spells.spell2() != null && !spells.spell2().equals("none")) {
                             CastSpellPayload payload = new CastSpellPayload(spells.spell2());
                             ClientPlayNetworking.send(payload);
                         }
@@ -85,7 +88,7 @@ public class WingcrafterClient implements ClientModInitializer, DataGeneratorEnt
                 while (spell3Keybind.wasPressed()) {
                     if (soulScroll.isOf(ModItems.SOUL_SCROLL)) {
                         SoulScrollSpells spells = soulScroll.get(ModDataComponentTypes.SOUL_SCROLL_SPELLS);
-                        if (spells.spell3() != null) {
+                        if (spells.spell3() != null && !spells.spell3().equals("none")) {
                             CastSpellPayload payload = new CastSpellPayload(spells.spell3());
                             ClientPlayNetworking.send(payload);
                         }
@@ -97,6 +100,9 @@ public class WingcrafterClient implements ClientModInitializer, DataGeneratorEnt
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             ClientConfig.HANDLER.save();
         });
+
+        BlockRenderLayerMap.putBlock(ModBlocks.SCROLL, BlockRenderLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(ModBlocks.FIREGLOBE, BlockRenderLayer.TRANSLUCENT);
     }
 
     @Override
