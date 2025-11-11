@@ -1,8 +1,7 @@
 package org.aussiebox.wingcrafter.mixin;
 
 import net.minecraft.client.texture.AtlasManager;
-import net.minecraft.util.Identifier;
-import org.aussiebox.wingcrafter.Wingcrafter;
+import org.aussiebox.wingcrafter.client.WingcrafterClient;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +15,7 @@ public class AtlasManagerMixin {
 
     static {
         ATLAS_METADATA = new ArrayList<>(ATLAS_METADATA);
-        ATLAS_METADATA.add(new AtlasManager.Metadata(Identifier.of(Wingcrafter.MOD_ID, "textures/atlas/fireglobe_glass.png"), Identifier.of(Wingcrafter.MOD_ID, "fireglobe_glass"), false));
+        ATLAS_METADATA.add(new AtlasManager.Metadata(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH, WingcrafterClient.FIREGLOBE_GLASS_ATLAS_DEFINITION, false));
         ATLAS_METADATA = List.copyOf(ATLAS_METADATA);
     }
 }
