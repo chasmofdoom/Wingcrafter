@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -13,6 +14,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.SpriteMapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
@@ -32,6 +34,10 @@ import org.aussiebox.wingcrafter.network.CastSpellPayload;
 import org.lwjgl.glfw.GLFW;
 
 public class WingcrafterClient implements ClientModInitializer, DataGeneratorEntrypoint {
+
+    public static final Identifier FIREGLOBE_GLASS_ATLAS_PATH = Identifier.of(Wingcrafter.MOD_ID, "textures/atlas/fireglobe_glass.png");
+    public static final Identifier FIREGLOBE_GLASS_ATLAS_DEFINITION = Identifier.of(Wingcrafter.MOD_ID, "fireglobe_glass");
+    public static final SpriteMapper FIREGLOBE_GLASS = new SpriteMapper(FIREGLOBE_GLASS_ATLAS_PATH, FIREGLOBE_GLASS_ATLAS_DEFINITION.getPath());
 
     @Override
     public void onInitializeClient() {
@@ -107,6 +113,7 @@ public class WingcrafterClient implements ClientModInitializer, DataGeneratorEnt
         BlockRenderLayerMap.putBlock(ModBlocks.SCROLL, BlockRenderLayer.TRANSLUCENT);
         BlockRenderLayerMap.putBlock(ModBlocks.FIREGLOBE, BlockRenderLayer.TRANSLUCENT);
         BlockEntityRendererFactories.register(ModBlockEntities.FIREGLOBE_BLOCK_ENTITY, FireglobeBlockEntityRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(FireglobeBlockEntityRenderer.FIREGLOBE_SIDES, FireglobeBlockEntityRenderer::getTexturedModelData);
     }
 
     @Override

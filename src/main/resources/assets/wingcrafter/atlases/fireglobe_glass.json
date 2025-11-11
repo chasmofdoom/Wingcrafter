@@ -2,8 +2,8 @@
   "sources": [
     {
       "type": "minecraft:directory",
-      "source": "fireglobe_glass",
-      "prefix": "fireglobe_glass/"
+      "prefix": "fireglobe_glass/",
+      "source": "fireglobe_glass"
     }
   ]
 }
