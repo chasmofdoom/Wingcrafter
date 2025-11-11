@@ -30,7 +30,7 @@ public class ModBlocks {
     public static final Block FIREGLOBE = register(
             "fireglobe",
             FireglobeBlock::new,
-            AbstractBlock.Settings.create().sounds(BlockSoundGroup.LANTERN).nonOpaque(),
+            AbstractBlock.Settings.create().sounds(BlockSoundGroup.LANTERN).luminance(FireglobeBlock::getLuminance).nonOpaque(),
             true
     );
 

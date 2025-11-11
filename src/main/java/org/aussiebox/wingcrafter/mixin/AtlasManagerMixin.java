@@ -15,7 +15,7 @@ public class AtlasManagerMixin {
 
     static {
         ATLAS_METADATA = new ArrayList<>(ATLAS_METADATA);
-        ATLAS_METADATA.add(new AtlasManager.Metadata(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH, WingcrafterClient.FIREGLOBE_GLASS_ATLAS_DEFINITION, false));
+        ATLAS_METADATA.add(new AtlasManager.Metadata(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH, WingcrafterClient.FIREGLOBE_GLASS_ATLAS_DEFINITION, true));
         ATLAS_METADATA = List.copyOf(ATLAS_METADATA);
     }
 }

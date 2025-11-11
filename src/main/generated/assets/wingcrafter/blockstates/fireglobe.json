@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "lit=false": {
       "model": "wingcrafter:block/fireglobe"
+    },
+    "lit=true": {
+      "model": "wingcrafter:block/fireglobe_lit"
     }
   }
 }

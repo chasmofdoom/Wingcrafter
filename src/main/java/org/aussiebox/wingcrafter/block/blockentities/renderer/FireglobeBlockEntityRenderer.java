@@ -81,7 +81,7 @@ public class FireglobeBlockEntityRenderer implements BlockEntityRenderer<Fireglo
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
 
-        ModelPartBuilder modelPartBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(4.0F, 2.0F, 4.0F, 8.0F, 8.0F, 8.0F, EnumSet.of(Direction.NORTH));
+        ModelPartBuilder modelPartBuilder = ModelPartBuilder.create().uv(0, 0).cuboid(4.0F, 2.0F, 4.0F, 8.0F, 8.0F, 0.0F, EnumSet.of(Direction.NORTH));
         modelPartData.addChild("back", modelPartBuilder, ModelTransform.of(16.0F, 12.0F, 0.0F, 0.0F, 0.0F, (float) Math.PI));
         modelPartData.addChild("left", modelPartBuilder, ModelTransform.of(0.0F, 12.0F, 0.0F, 0.0F, (float) (-Math.PI / 2), (float) Math.PI));
         modelPartData.addChild("right", modelPartBuilder, ModelTransform.of(16.0F, 12.0F, 16.0F, 0.0F, (float) (Math.PI / 2), (float) Math.PI));
@@ -101,34 +101,34 @@ public class FireglobeBlockEntityRenderer implements BlockEntityRenderer<Fireglo
         queue.submitModelPart(
                 this.front,
                 matrices,
-                RenderLayer.getEntityCutout(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
+                RenderLayer.getEntityTranslucent(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
                 state.lightmapCoordinates,
-                OverlayTexture.getUv(0, false),
+                OverlayTexture.DEFAULT_UV,
                 this.materials.getSprite(RED)
         );
         queue.submitModelPart(
                 this.left,
                 matrices,
-                RenderLayer.getEntityCutout(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
+                RenderLayer.getEntityTranslucent(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
                 state.lightmapCoordinates,
-                OverlayTexture.getUv(0, false),
+                OverlayTexture.DEFAULT_UV,
                 this.materials.getSprite(LIME)
         );
         queue.submitModelPart(
                 this.back,
                 matrices,
-                RenderLayer.getEntityCutout(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
+                RenderLayer.getEntityTranslucent(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
                 state.lightmapCoordinates,
-                OverlayTexture.getUv(0, false),
+                OverlayTexture.DEFAULT_UV,
                 this.materials.getSprite(YELLOW)
         );
         queue.submitModelPart(
                 this.right,
                 matrices,
-                RenderLayer.getEntityCutout(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
+                RenderLayer.getEntityTranslucent(WingcrafterClient.FIREGLOBE_GLASS_ATLAS_PATH),
                 state.lightmapCoordinates,
-                OverlayTexture.getUv(0, false),
-                this.materials.getSprite(LIGHT_BLUE)
+                OverlayTexture.DEFAULT_UV,
+                this.materials.getSprite(BLUE)
         );
         matrices.pop();
     }

@@ -24,9 +24,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-import org.aussiebox.wingcrafter.Wingcrafter;
-import org.aussiebox.wingcrafter.attach.ModAttachmentTypes;
-import org.aussiebox.wingcrafter.attach.ModCustomAttachedData;
 import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
 import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
@@ -74,23 +71,18 @@ public class ScrollBlock extends HorizontalFacingBlock implements BlockEntityPro
         if (!player.getAbilities().allowModifyWorld) {
             return ActionResult.PASS;
         } else {
-            if (player.isHolding(ModItems.SEAL)) {
-                return ActionResult.PASS;
-            }
             if (!(world.getBlockEntity(pos) instanceof ScrollBlockEntity scrollBlockEntity)) {
                 return super.onUse(state, world, pos, player, hit);
             }
+            if (player.isHolding(ModItems.SEAL)) {
+                return ActionResult.PASS;
+            }
             if (!player.isSneaking()) {
                 player.openHandledScreen(scrollBlockEntity);
-                ModCustomAttachedData data = player.getAttachedOrSet(ModAttachmentTypes.SOUL_ATTACH, ModCustomAttachedData.DEFAULT);
-                player.setAttached(ModAttachmentTypes.SOUL_ATTACH, data.removeSoul(data, 100));
-                Wingcrafter.LOGGER.info(String.valueOf(player.getAttachedOrSet(ModAttachmentTypes.SOUL_ATTACH,  ModCustomAttachedData.DEFAULT)));
             } else {
                 boolean rolled = state.get(ROLLED);
                 world.setBlockState(pos, state.with(ROLLED, !rolled));
-                world.playSound(player, pos, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                ModCustomAttachedData data = player.getAttachedOrSet(ModAttachmentTypes.SOUL_ATTACH, ModCustomAttachedData.DEFAULT);
-                player.setAttached(ModAttachmentTypes.SOUL_ATTACH, data.setSoul(1000));
+                world.playSound(null, pos, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
             return ActionResult.SUCCESS;
         }
@@ -187,11 +179,13 @@ public class ScrollBlock extends HorizontalFacingBlock implements BlockEntityPro
                     );
                     offhand.set(ModDataComponentTypes.SCROLL_TEXT, scrollBlockEntity.getText());
                     offhand.set(ModDataComponentTypes.SCROLL_TITLE, scrollBlockEntity.getTitle());
-                    if (stack.getDamage() + offhand.getCount() >= stack.getMaxDamage()) {
-                        player.sendEquipmentBreakStatus(stack.getItem(), EquipmentSlot.MAINHAND);
-                        player.getInventory().setStack(player.getInventory().getSelectedSlot(), new ItemStack(Items.FEATHER));
-                    } else {
-                        stack.damage(offhand.getCount(), player);
+                    if (!player.isInCreativeMode()) {
+                        if (stack.getDamage() + offhand.getCount() >= stack.getMaxDamage()) {
+                            player.sendEquipmentBreakStatus(stack.getItem(), EquipmentSlot.MAINHAND);
+                            player.getInventory().setStack(player.getInventory().getSelectedSlot(), new ItemStack(Items.FEATHER));
+                        } else {
+                            stack.damage(offhand.getCount(), player);
+                        }
                     }
                     player.getInventory().markDirty();
 
