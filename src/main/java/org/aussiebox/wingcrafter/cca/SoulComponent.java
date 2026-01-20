@@ -6,7 +6,6 @@ import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
-import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
@@ -39,12 +38,12 @@ public class SoulComponent implements AutoSyncedComponent {
     }
 
     @Override
-    public void readData(@NotNull ReadView tag) {
+    public void readData(ReadView tag) {
         this.soul = tag.contains("soul") ? tag.getInt("soul", 1000) : 1000;
     }
 
     @Override
-    public void writeData(@NotNull WriteView tag) {
+    public void writeData(WriteView tag) {
         tag.putInt("soul", this.soul);
     }
 }

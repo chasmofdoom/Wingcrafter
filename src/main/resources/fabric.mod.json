@@ -32,7 +32,8 @@
   "custom": {
     "cardinal-components": [
       "wingcrafter:freeze",
-      "wingcrafter:soul"
+      "wingcrafter:soul",
+      "wingcrafter:spell_data"
     ]
   },
   "mixins": [

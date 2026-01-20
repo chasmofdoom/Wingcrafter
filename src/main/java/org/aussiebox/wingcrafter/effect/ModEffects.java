@@ -11,7 +11,6 @@ import org.aussiebox.wingcrafter.Wingcrafter;
 
 public class ModEffects {
     public static StatusEffect FREEZE;
-    public static StatusEffect FLAMEBREATH;
     public static StatusEffect SOUL_DECAY;
 
     public static void registerStatusEffects() {
@@ -34,18 +33,6 @@ public class ModEffects {
                 ).addAttributeModifier(
                         EntityAttributes.WATER_MOVEMENT_EFFICIENCY,
                         Identifier.of(Wingcrafter.MOD_ID, "freeze"),
-                        -100,
-                        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                ));
-        FLAMEBREATH =  Registry.register(Registries.STATUS_EFFECT, Identifier.of(Wingcrafter.MOD_ID, "flamebreath"),
-                new FlamebreathEffect(StatusEffectCategory.NEUTRAL, 0xFFFC6603).addAttributeModifier(
-                        EntityAttributes.MOVEMENT_SPEED,
-                        Identifier.of(Wingcrafter.MOD_ID, "flamebreath"),
-                        -0.75,
-                        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                ).addAttributeModifier(
-                        EntityAttributes.JUMP_STRENGTH,
-                        Identifier.of(Wingcrafter.MOD_ID, "flamebreath"),
                         -100,
                         EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
                 ));

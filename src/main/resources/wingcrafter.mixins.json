@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "CopperGolemMixin",
-    "PlayerMovementMixin"
+    "PlayerMovementMixin",
+    "TreeDecoratorTypeInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

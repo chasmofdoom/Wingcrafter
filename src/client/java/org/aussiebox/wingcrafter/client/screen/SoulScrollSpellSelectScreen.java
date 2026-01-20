@@ -16,7 +16,8 @@ import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
 import org.aussiebox.wingcrafter.network.UpdateSoulScrollDataPayload;
 import org.aussiebox.wingcrafter.screenhandler.SoulScrollSpellSelectScreenHandler;
-import org.aussiebox.wingcrafter.spells.Spells;
+import org.aussiebox.wingcrafter.spells.util.Spell;
+import org.aussiebox.wingcrafter.spells.util.SpellRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -41,39 +42,6 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
         playerInventoryTitleX = -10000;
     }
 
-    public Map<String, Identifier> spellInfo = new HashMap<>();
-    public Map<String, Identifier> fetchSpellInfo() {
-        spellInfo.put("frostbeam", Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spells/frostbeam.png"));
-        spellInfo.put("flamethrower", Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spells/frostbeam.png"));
-        return spellInfo;
-    }
-
-    public Map<String, Text> spellTooltips = new HashMap<>();
-    public Map<String, Text> fetchSpellTooltips() {
-        Map<String, Integer> soulPenalties = Spells.fetchSpellSoulInfo();
-        spellTooltips.put("frostbeam",
-                Text.translatable("spell.wingcrafter.frostbeam")
-                        .withColor(0xFF91F8FF)
-                    .append("\n\nFreeze a 3x3x3 block area in front of you.\nAny entities hit by the beam will take\n2.5 hearts of damage.")
-                        .withColor(0xFFAAAAAA)
-                    .append("\n\nSoul Penalty: ")
-                        .withColor(0xFF91C4FF)
-                    .append(soulPenalties.get("frostbeam") + "+")
-                        .withColor(0xFFFFFFFF)
-        );
-        spellTooltips.put("flamethrower",
-                Text.translatable("spell.wingcrafter.flamethrower")
-                        .withColor(0xFFFC8403)
-                    .append("\n\nBreathe fire for a short period of time.")
-                        .withColor(0xFFAAAAAA)
-                    .append("\n\nSoul Penalty: ")
-                        .withColor(0xFF91C4FF)
-                    .append(String.valueOf(soulPenalties.get("flamethrower")))
-                        .withColor(0xFFFFFFFF)
-        );
-        return spellTooltips;
-    }
-
     private final GridLayout buttonGrid = (GridLayout) Containers.grid(Sizing.content(), Sizing.content(), 1000000, 9)
             .padding(Insets.of(10))
             .surface(Surface.DARK_PANEL)
@@ -88,6 +56,8 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
             .horizontalAlignment(HorizontalAlignment.CENTER);
     private FlowLayout currentSelectionFlow;
 
+    Map<String, Spell> spellMap = new HashMap<>();
+
     @Override
     protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
         return OwoUIAdapter.create(this, Containers::verticalFlow);
@@ -95,8 +65,11 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        fetchSpellInfo();
-        fetchSpellTooltips();
+        try {
+            spellMap = SpellRegistry.getSpellMap();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         setSelectionFlow(selectionFlow);
         setButtonGrid(buttonGrid);
@@ -130,7 +103,7 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
         this.currentButtonGrid = grid;
         int row = 1;
         int column = 0;
-        for (String id : spellInfo.keySet()) {
+        for (String id : spellMap.keySet()) {
             column++;
             if (column > 8) {
                 row++;
@@ -145,7 +118,7 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
 
                                             if (oldSpell != null) {
                                                 oldSpell.renderer(ButtonComponent.Renderer.texture(
-                                                        spellInfo.get(selectedSpells[selectedSlot-1]),
+                                                        spellMap.get(selectedSpells[selectedSlot-1]).getButtonTexture(),
                                                         0,
                                                         0,
                                                         32,
@@ -154,7 +127,7 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                                             }
                                             selectedSpells[selectedSlot-1] = id;
                                             newSpell.renderer(ButtonComponent.Renderer.texture(
-                                                    Arrays.stream(selectedSpells).anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellInfo.get(id),
+                                                    Arrays.stream(selectedSpells).anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellMap.get(id).getButtonTexture(),
                                                     0,
                                                     0,
                                                     32,
@@ -166,13 +139,12 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                                     }
                             )
                             .renderer(ButtonComponent.Renderer.texture(
-                                    Arrays.stream(selectedSpells).anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellInfo.get(id),
+                                    Arrays.stream(selectedSpells).anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellMap.get(id).getButtonTexture(),
                                     0,
                                     0,
                                     32,
                                     32
                             ))
-                            .tooltip(spellTooltips.get(id))
                             .sizing(Sizing.fixed(32))
                             .margins(Insets.of(5))
                             .id("spell_" + id),
@@ -196,7 +168,7 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                                             ButtonComponent oldSpell = this.currentButtonGrid.childById(ButtonComponent.class, "spell_" + selectedSpells[selectedSlot-1]);
                                             if (oldSpell != null) {
                                                 oldSpell.renderer(ButtonComponent.Renderer.texture(
-                                                        spellInfo.get(selectedSpells[selectedSlot-1]),
+                                                        spellMap.get(selectedSpells[selectedSlot-1]).getButtonTexture(),
                                                         0,
                                                         0,
                                                         32,
@@ -231,10 +203,10 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        if (spellInfo.containsKey(selectedSpells[0])) {
+        if (spellMap.containsKey(selectedSpells[0])) {
             context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
-                    spellInfo.get(selectedSpells[0]),
+                    spellMap.get(selectedSpells[0]).getButtonTexture(),
                     spellButton1.getX() + 6,
                     spellButton1.getY() + 6,
                     0,
@@ -245,10 +217,10 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                     spellButton1.getHeight() - 12
             );
         }
-        if (spellInfo.containsKey(selectedSpells[1])) {
+        if (spellMap.containsKey(selectedSpells[1])) {
             context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
-                    spellInfo.get(selectedSpells[1]),
+                    spellMap.get(selectedSpells[1]).getButtonTexture(),
                     spellButton2.getX() + 6,
                     spellButton2.getY() + 6,
                     0,
@@ -259,10 +231,10 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                     spellButton2.getHeight() - 12
             );
         }
-        if (spellInfo.containsKey(selectedSpells[2])) {
+        if (spellMap.containsKey(selectedSpells[2])) {
             context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
-                    spellInfo.get(selectedSpells[2]),
+                    spellMap.get(selectedSpells[2]).getButtonTexture(),
                     spellButton3.getX() + 6,
                     spellButton3.getY() + 6,
                     0,

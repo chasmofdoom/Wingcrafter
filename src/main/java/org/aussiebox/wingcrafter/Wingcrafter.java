@@ -20,6 +20,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import org.aussiebox.wingcrafter.block.ModBlockEntities;
 import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
@@ -29,13 +30,16 @@ import org.aussiebox.wingcrafter.effect.ModEffects;
 import org.aussiebox.wingcrafter.entity.ModEntities;
 import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
 import org.aussiebox.wingcrafter.item.ModItems;
+import org.aussiebox.wingcrafter.mixin.TreeDecoratorTypeInvoker;
 import org.aussiebox.wingcrafter.network.CastSpellPayload;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
 import org.aussiebox.wingcrafter.network.SoulKillPayload;
 import org.aussiebox.wingcrafter.network.UpdateSoulScrollDataPayload;
-import org.aussiebox.wingcrafter.spells.Spells;
+import org.aussiebox.wingcrafter.spells.util.Spell;
+import org.aussiebox.wingcrafter.spells.util.SpellRegistry;
 import org.aussiebox.wingcrafter.util.WingcrafterUtil;
-import org.aussiebox.wingcrafter.world.DragonflameCactusGeneration;
+import org.aussiebox.wingcrafter.world.GenerateFeatures;
+import org.aussiebox.wingcrafter.world.tree_decorators.DroopingLeavesDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +56,8 @@ public class Wingcrafter implements ModInitializer {
     public static Identifier id(String path) {
         return Identifier.of(MOD_ID, path);
     }
+
+    public static final TreeDecoratorType<DroopingLeavesDecorator> DROOPING_LEAVES_TREE_DECORATOR = TreeDecoratorTypeInvoker.callRegister("wingcrafter:drooping_leaves", DroopingLeavesDecorator.CODEC);
 
     @Override
     public void onInitialize() {
@@ -105,7 +111,12 @@ public class Wingcrafter implements ModInitializer {
 
         PayloadTypeRegistry.playC2S().register(CastSpellPayload.ID, CastSpellPayload.PACKET_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(CastSpellPayload.ID, (payload, context) -> {
-            Spells.cast(payload.spellID(), context.player());
+            try {
+                Spell spell = SpellRegistry.getSpell(payload.spellID());
+                if (spell != null) spell.cast(context.player());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
 
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
@@ -125,6 +136,6 @@ public class Wingcrafter implements ModInitializer {
         ModEffects.registerStatusEffects();
         ModEntities.registerModEntities();
 
-        DragonflameCactusGeneration.generateCacti();
+        GenerateFeatures.generate();
     }
 }

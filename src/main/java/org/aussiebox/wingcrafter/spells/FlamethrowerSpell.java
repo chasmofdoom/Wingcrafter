@@ -1,15 +1,13 @@
-package org.aussiebox.wingcrafter.effect;
+package org.aussiebox.wingcrafter.spells;
 
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -18,25 +16,36 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
+import org.aussiebox.wingcrafter.Wingcrafter;
+import org.aussiebox.wingcrafter.spells.util.Spell;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class FlamebreathEffect extends StatusEffect {
-    public FlamebreathEffect(StatusEffectCategory statusEffectCategory, int color) {
-        super(statusEffectCategory, color);
+public class FlamethrowerSpell extends Spell {
+    public FlamethrowerSpell() {
+        super(
+                "flamethrower",
+                Wingcrafter.id("textures/gui/sprites/soul_scroll/spells/frostbeam.png"),
+                5,
+                100,
+                500
+        );
     }
 
     @Override
-    public void onApplied(LivingEntity entity, int amplifier) {
-        entity.getEntityWorld().playSound(null, entity.getBlockPos(), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
-        super.onApplied(entity, amplifier);
+    public void cast(ServerPlayerEntity source) {
+        super.cast(source);
+        afflictSoulPenalty(source);
+        source.getEntityWorld().playSound(null, source.getBlockPos(), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
     @Override
-    public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-        Vec3d startVec = entity.getEyePos();
-        Vec3d lookVec = entity.getRotationVec(1.0F);
+    public void castTick(ServerPlayerEntity source) {
+        ServerWorld world = source.getEntityWorld();
+
+        Vec3d startVec = source.getEyePos();
+        Vec3d lookVec = source.getRotationVec(1.0F);
         double maxDistance = 20.0;
         Vec3d endVec = startVec.add(lookVec.multiply(maxDistance));
 
@@ -45,26 +54,26 @@ public class FlamebreathEffect extends StatusEffect {
                 endVec,
                 RaycastContext.ShapeType.OUTLINE,
                 RaycastContext.FluidHandling.ANY,
-                entity
+                source
         );
 
         HitResult hitResult = world.raycast(context);
 
-        List<Entity> entities = world.getOtherEntities(entity, new Box(hitResult.getPos().x-1.5, hitResult.getPos().y-1.5, hitResult.getPos().z-1.5, hitResult.getPos().x+1.5, hitResult.getPos().y+1.5, hitResult.getPos().z+1.5));
+        List<Entity> entities = world.getOtherEntities(source, new Box(hitResult.getPos().x-1.5, hitResult.getPos().y-1.5, hitResult.getPos().z-1.5, hitResult.getPos().x+1.5, hitResult.getPos().y+1.5, hitResult.getPos().z+1.5));
         DamageSource damageSource = new DamageSource(
                 world.getRegistryManager()
                         .getOrThrow(RegistryKeys.DAMAGE_TYPE)
                         .getEntry(DamageTypes.ON_FIRE.getValue()).get(),
-                entity
+                source
         );
         for (Entity attacked : entities) {
             attacked.damage(world, damageSource, 1);
             attacked.setOnFireForTicks(attacked.getFireTicks()+10);
         }
 
-        double startX = entity.getEyePos().x;
-        double startY = entity.getEyePos().y;
-        double startZ = entity.getEyePos().z;
+        double startX = source.getEyePos().x;
+        double startY = source.getEyePos().y;
+        double startZ = source.getEyePos().z;
         double endX = hitResult.getPos().x;
         double endY = hitResult.getPos().y;
         double endZ = hitResult.getPos().z;
@@ -88,12 +97,5 @@ public class FlamebreathEffect extends StatusEffect {
                 world.setBlockState(BlockPos.ofFloored(hitResult.getPos()), AbstractFireBlock.getState(world, BlockPos.ofFloored(hitResult.getPos())));
             }
         }
-        return super.applyUpdateEffect(world, entity, amplifier);
-    }
-
-    @Override
-    public boolean canApplyUpdateEffect(int pDuration, int pAmplifier) {
-        return true;
     }
 }
-

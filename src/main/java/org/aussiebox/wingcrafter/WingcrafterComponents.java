@@ -3,6 +3,7 @@ package org.aussiebox.wingcrafter;
 import net.minecraft.entity.player.PlayerEntity;
 import org.aussiebox.wingcrafter.cca.FreezeComponent;
 import org.aussiebox.wingcrafter.cca.SoulComponent;
+import org.aussiebox.wingcrafter.cca.SpellDataComponent;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
@@ -19,5 +20,8 @@ public class WingcrafterComponents implements EntityComponentInitializer {
         registry.beginRegistration(PlayerEntity.class, SoulComponent.KEY)
                 .respawnStrategy(RespawnCopyStrategy.NEVER_COPY)
                 .end(SoulComponent::new);
+        registry.beginRegistration(PlayerEntity.class, SpellDataComponent.KEY)
+                .respawnStrategy(RespawnCopyStrategy.NEVER_COPY)
+                .end(SpellDataComponent::new);
     }
 }

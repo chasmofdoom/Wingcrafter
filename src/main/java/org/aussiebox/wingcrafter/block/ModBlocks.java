@@ -89,6 +89,18 @@ public class ModBlocks {
             true
     );
 
+    public static final Block MOON_GLOBE = register(
+            "moon_globe",
+            MoonGlobeBlock::new,
+            AbstractBlock.Settings.create()
+                    .luminance(MoonGlobeBlock::getLuminance)
+                    .emissiveLighting(Blocks::always)
+                    .postProcess(Blocks::always)
+                    .sounds(BlockSoundGroup.AMETHYST_BLOCK)
+                    .nonOpaque(),
+            true
+    );
+
     private static Block register(String name, Function<AbstractBlock.Settings, Block> blockFactory, AbstractBlock.Settings settings, boolean shouldRegisterItem) {
         RegistryKey<Block> blockKey = keyOfBlock(name);
         Block block = blockFactory.apply(settings.registryKey(blockKey));
