@@ -17,7 +17,7 @@ public class GenerateFeatures {
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.DESERT, BiomeKeys.BADLANDS),
                 GenerationStep.Feature.VEGETAL_DECORATION, key);
 
-        key = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(Wingcrafter.MOD_ID, "place_moon_willow_tree"));
+        key = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(Wingcrafter.MOD_ID, "place_frost_willow_tree"));
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.ICE_SPIKES, BiomeKeys.SNOWY_TAIGA, BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_SLOPES),
                 GenerationStep.Feature.VEGETAL_DECORATION, key);
 
