@@ -1,29 +1,31 @@
-package org.aussiebox.wingcrafter.mixin;
+package org.aussiebox.wingcrafter.client.mixin;
 
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.aussiebox.wingcrafter.cca.FreezeComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(PlayerEntity.class)
+@Mixin(ClientPlayerEntity.class)
 public abstract class PlayerMovementMixin extends LivingEntity {
     protected PlayerMovementMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    @Inject(
-            method = "canMoveVoluntarily",
+    @ModifyVariable(
+            method = "move",
             at = @At("HEAD"),
-            cancellable = true
+            ordinal = 0,
+            argsOnly = true
     )
-    private void canMove(CallbackInfoReturnable<Boolean> cir) {
+    private Vec3d wingcrafter$canMove(Vec3d movement) {
         if (FreezeComponent.KEY.get(this).getFreezeTicks() > 0) {
-            cir.setReturnValue(false);
+            return new Vec3d(0, Math.min(0, movement.getY()), 0);
         }
+        return movement;
     }
 }

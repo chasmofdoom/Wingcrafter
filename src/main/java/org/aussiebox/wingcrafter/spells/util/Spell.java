@@ -8,15 +8,17 @@ import org.aussiebox.wingcrafter.cca.SpellDataComponent;
 
 public class Spell {
     @Getter private final String spellID;
+    @Getter private final int color;
     @Getter private final Identifier buttonTexture;
     @Getter private final int soulPenalty;
     @Getter private final int castDuration;
     @Getter private final int castCooldown;
 
-    public Spell(String spellID, Identifier buttonTexture, int soulPenalty, int castDuration, int castCooldown) {
+    public Spell(String spellID, int color, Identifier buttonTexture, int soulPenalty, int castDuration, int castCooldown) {
         this.spellID = spellID;
-        this.soulPenalty = soulPenalty;
+        this.color = color;
         this.buttonTexture = buttonTexture;
+        this.soulPenalty = soulPenalty;
         this.castDuration = castDuration;
         this.castCooldown = castCooldown;
     }
@@ -25,8 +27,8 @@ public class Spell {
         SpellDataComponent data = SpellDataComponent.KEY.get(source);
         if (data.getSpellCooldown(spellID) > 0) return;
 
-        data.setSpellCooldown(spellID, castCooldown);
-        data.setSpellDuration(spellID, castDuration);
+        data.setSpellCooldown(spellID, this.castCooldown);
+        data.setSpellDuration(spellID, this.castDuration);
     }
 
     public void castTick(ServerPlayerEntity source) {

@@ -4,14 +4,19 @@ import org.aussiebox.wingcrafter.spells.FlamethrowerSpell;
 import org.aussiebox.wingcrafter.spells.FrostbeamSpell;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SpellRegistry {
-    private static final Map<String, Class<? extends Spell>> registry = new HashMap<>();
+    private static final Map<String, Class<? extends Spell>> registry = new LinkedHashMap<>();
 
     static {
         register("frostbeam", FrostbeamSpell.class);
         register("flamethrower", FlamethrowerSpell.class);
+        register("test1", FrostbeamSpell.class);
+        register("test2", FrostbeamSpell.class);
+        register("test3", FrostbeamSpell.class);
+        register("test4", FrostbeamSpell.class);
     }
 
     public static void register(String id, Class<? extends Spell> spellClass) {

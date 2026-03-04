@@ -17,6 +17,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import org.aussiebox.wingcrafter.Wingcrafter;
+import org.aussiebox.wingcrafter.cca.SpellDataComponent;
 import org.aussiebox.wingcrafter.spells.util.Spell;
 
 import java.util.List;
@@ -26,17 +27,20 @@ public class FlamethrowerSpell extends Spell {
     public FlamethrowerSpell() {
         super(
                 "flamethrower",
-                Wingcrafter.id("textures/gui/sprites/soul_scroll/spells/frostbeam.png"),
+                0xFFFFBA25,
+                Wingcrafter.id("textures/gui/sprites/soul_scroll/spells/flamethrower.png"),
                 5,
                 100,
-                500
+                400
         );
     }
 
     @Override
     public void cast(ServerPlayerEntity source) {
+        if (SpellDataComponent.KEY.get(source).getSpellCooldown(getSpellID()) > 0) return;
         super.cast(source);
         afflictSoulPenalty(source);
+
         source.getEntityWorld().playSound(null, source.getBlockPos(), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 

@@ -88,6 +88,7 @@ public class SpellDataComponent implements AutoSyncedComponent, ServerTickingCom
             }
             spellDurations.put(spell, duration-1);
         }
+        this.sync();
     }
 
     public void sync() {

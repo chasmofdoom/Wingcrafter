@@ -7,6 +7,8 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.GridLayout;
 import io.wispforest.owo.ui.core.*;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
@@ -14,30 +16,26 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.aussiebox.wingcrafter.Wingcrafter;
-import org.aussiebox.wingcrafter.network.UpdateSoulScrollDataPayload;
-import org.aussiebox.wingcrafter.screenhandler.SoulScrollSpellSelectScreenHandler;
+import org.aussiebox.wingcrafter.network.UpdateSpellcasterDataPayload;
+import org.aussiebox.wingcrafter.screenhandler.SpellcasterSpellSelectScreenHandler;
 import org.aussiebox.wingcrafter.spells.util.Spell;
 import org.aussiebox.wingcrafter.spells.util.SpellRegistry;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
-public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout, SoulScrollSpellSelectScreenHandler> {
-    public int selectedSlot = 1;
-    public String[] selectedSpells = {this.handler.spell1, this.handler.spell2, this.handler.spell3};
-    ButtonComponent spellButton1;
-    ButtonComponent spellButton2;
-    ButtonComponent spellButton3;
+public class SpellcasterSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout, SpellcasterSpellSelectScreenHandler> {
+    public int selectedSlot = 0;
+    Object2ObjectMap<Integer, ButtonComponent> spellButtons = new Object2ObjectLinkedOpenHashMap<>();
 
+    public static final int buttonSize = 24;
     public static final Identifier SELECTED = Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_select/selection.png");
     public static final Identifier UNSELECTED = Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_select/slot.png");
 
     Text titleText = Text.of("Spell Selection");
 
-    public SoulScrollSpellSelectScreen(SoulScrollSpellSelectScreenHandler handler, PlayerInventory inventory, Text title) {
+    public SpellcasterSpellSelectScreen(SpellcasterSpellSelectScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         playerInventoryTitleX = -10000;
     }
@@ -56,7 +54,8 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
             .horizontalAlignment(HorizontalAlignment.CENTER);
     private FlowLayout currentSelectionFlow;
 
-    Map<String, Spell> spellMap = new HashMap<>();
+    Map<String, Spell> spellMap = new LinkedHashMap<>();
+    List<String> selectedSpells = new ArrayList<>(this.handler.spells);
 
     @Override
     protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
@@ -90,7 +89,7 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
 
     @Override
     public void close() {
-        UpdateSoulScrollDataPayload payload = new UpdateSoulScrollDataPayload(this.handler.itemStack, selectedSpells[0], selectedSpells[1], selectedSpells[2]);
+        UpdateSpellcasterDataPayload payload = new UpdateSpellcasterDataPayload(this.handler.itemStack, selectedSpells);
         ClientPlayNetworking.send(payload);
         super.close();
     }
@@ -112,26 +111,26 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
             this.currentButtonGrid.child(Components.button(
                                     Text.empty(),
                                     button -> {
-                                        if (Arrays.stream(selectedSpells).noneMatch(Predicate.isEqual(id))) {
-                                            ButtonComponent oldSpell = this.currentButtonGrid.childById(ButtonComponent.class, "spell_" + selectedSpells[selectedSlot-1]);
+                                        if (selectedSpells.stream().noneMatch(Predicate.isEqual(id))) {
+                                            ButtonComponent oldSpell = this.currentButtonGrid.childById(ButtonComponent.class, "spell_" + selectedSpells.get(selectedSlot));
                                             ButtonComponent newSpell = this.currentButtonGrid.childById(ButtonComponent.class, "spell_" + id);
 
                                             if (oldSpell != null) {
                                                 oldSpell.renderer(ButtonComponent.Renderer.texture(
-                                                        spellMap.get(selectedSpells[selectedSlot-1]).getButtonTexture(),
+                                                        spellMap.get(selectedSpells.get(selectedSlot)).getButtonTexture(),
                                                         0,
                                                         0,
-                                                        32,
-                                                        32
+                                                        buttonSize,
+                                                        buttonSize
                                                 ));
                                             }
-                                            selectedSpells[selectedSlot-1] = id;
+                                            selectedSpells.set(selectedSlot, id);
                                             newSpell.renderer(ButtonComponent.Renderer.texture(
-                                                    Arrays.stream(selectedSpells).anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellMap.get(id).getButtonTexture(),
+                                                    selectedSpells.stream().anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellMap.get(id).getButtonTexture(),
                                                     0,
                                                     0,
-                                                    32,
-                                                    32
+                                                    buttonSize,
+                                                    buttonSize
                                             ));
 
                                             setSelectionFlow(selectionFlow);
@@ -139,13 +138,13 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                                     }
                             )
                             .renderer(ButtonComponent.Renderer.texture(
-                                    Arrays.stream(selectedSpells).anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellMap.get(id).getButtonTexture(),
+                                    selectedSpells.stream().anyMatch(Predicate.isEqual(id)) ? Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_selected.png") : spellMap.get(id).getButtonTexture(),
                                     0,
                                     0,
-                                    32,
-                                    32
+                                    buttonSize,
+                                    buttonSize
                             ))
-                            .sizing(Sizing.fixed(32))
+                            .sizing(Sizing.fixed(buttonSize))
                             .margins(Insets.of(5))
                             .id("spell_" + id),
                     row, column);
@@ -159,24 +158,24 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
     public void setSelectionFlow(FlowLayout flow) {
         this.currentSelectionFlow = flow;
         this.currentSelectionFlow.clearChildren();
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < selectedSpells.size(); i++) {
             int index = i;
             this.currentSelectionFlow.child(Components.button(
                                     Text.empty(),
                                     button -> {
                                         if (selectedSlot == index) {
-                                            ButtonComponent oldSpell = this.currentButtonGrid.childById(ButtonComponent.class, "spell_" + selectedSpells[selectedSlot-1]);
+                                            ButtonComponent oldSpell = this.currentButtonGrid.childById(ButtonComponent.class, "spell_" + selectedSpells.get(selectedSlot));
                                             if (oldSpell != null) {
                                                 oldSpell.renderer(ButtonComponent.Renderer.texture(
-                                                        spellMap.get(selectedSpells[selectedSlot-1]).getButtonTexture(),
+                                                        spellMap.get(selectedSpells.get(selectedSlot)).getButtonTexture(),
                                                         0,
                                                         0,
-                                                        32,
-                                                        32
+                                                        buttonSize,
+                                                        buttonSize
                                                 ));
                                             }
 
-                                            selectedSpells[selectedSlot-1] = "none";
+                                            selectedSpells.set(selectedSlot, "none");
                                         }
                                         selectedSlot = index;
                                         setSelectionFlow(selectionFlow);
@@ -193,56 +192,52 @@ public class SoulScrollSpellSelectScreen extends BaseOwoHandledScreen<FlowLayout
                             .margins(Insets.of(4))
                             .id("spell_slot_" + index)
             );
+            spellButtons.put(index, this.currentSelectionFlow.childById(ButtonComponent.class, "spell_slot_" + index));
         }
-        spellButton1 = this.currentSelectionFlow.childById(ButtonComponent.class, "spell_slot_1");
-        spellButton2 = this.currentSelectionFlow.childById(ButtonComponent.class, "spell_slot_2");
-        spellButton3 = this.currentSelectionFlow.childById(ButtonComponent.class, "spell_slot_3");
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        if (spellMap.containsKey(selectedSpells[0])) {
+        for (String spellID : selectedSpells) {
+            int slot = selectedSpells.indexOf(spellID);
+            ButtonComponent button = spellButtons.get(slot);
+
+            if (!spellMap.containsKey(spellID)) continue;
+
             context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
-                    spellMap.get(selectedSpells[0]).getButtonTexture(),
-                    spellButton1.getX() + 6,
-                    spellButton1.getY() + 6,
+                    spellMap.get(spellID).getButtonTexture(),
+                    button.getX() + 5,
+                    button.getY() + 5,
                     0,
                     0,
-                    spellButton1.getWidth() - 12,
-                    spellButton1.getHeight() - 12,
-                    spellButton1.getWidth() - 12,
-                    spellButton1.getHeight() - 12
+                    button.getWidth() - 10,
+                    button.getHeight() - 10,
+                    button.getWidth() - 10,
+                    button.getHeight() - 10
             );
         }
-        if (spellMap.containsKey(selectedSpells[1])) {
+
+        for (Component component : this.currentButtonGrid.children()) {
+            if (!(component instanceof ButtonComponent button)) continue;
+            if (button.id() == null) continue;
+            if (!Objects.requireNonNull(button.id()).startsWith("spell_")) continue;
+            String spellID = Objects.requireNonNull(button.id()).replace("spell_", "");
+
+            if (selectedSpells.stream().anyMatch(Predicate.isEqual(spellID))) continue;
             context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
-                    spellMap.get(selectedSpells[1]).getButtonTexture(),
-                    spellButton2.getX() + 6,
-                    spellButton2.getY() + 6,
+                    UNSELECTED,
+                    button.getX() - 3,
+                    button.getY() - 3,
                     0,
                     0,
-                    spellButton2.getWidth() - 12,
-                    spellButton2.getHeight() - 12,
-                    spellButton2.getWidth() - 12,
-                    spellButton2.getHeight() - 12
-            );
-        }
-        if (spellMap.containsKey(selectedSpells[2])) {
-            context.drawTexture(
-                    RenderPipelines.GUI_TEXTURED,
-                    spellMap.get(selectedSpells[2]).getButtonTexture(),
-                    spellButton3.getX() + 6,
-                    spellButton3.getY() + 6,
-                    0,
-                    0,
-                    spellButton3.getWidth() - 12,
-                    spellButton3.getHeight() - 12,
-                    spellButton3.getWidth() - 12,
-                    spellButton3.getHeight() - 12
+                    button.getWidth() + 6,
+                    button.getHeight() + 6,
+                    button.getWidth() + 6,
+                    button.getHeight() + 6
             );
         }
     }

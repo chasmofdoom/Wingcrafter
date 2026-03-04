@@ -25,7 +25,6 @@ import org.aussiebox.wingcrafter.block.ModBlockEntities;
 import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
 import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
-import org.aussiebox.wingcrafter.component.SoulScrollSpells;
 import org.aussiebox.wingcrafter.effect.ModEffects;
 import org.aussiebox.wingcrafter.entity.ModEntities;
 import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
@@ -34,7 +33,7 @@ import org.aussiebox.wingcrafter.mixin.TreeDecoratorTypeInvoker;
 import org.aussiebox.wingcrafter.network.CastSpellPayload;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
 import org.aussiebox.wingcrafter.network.SoulKillPayload;
-import org.aussiebox.wingcrafter.network.UpdateSoulScrollDataPayload;
+import org.aussiebox.wingcrafter.network.UpdateSpellcasterDataPayload;
 import org.aussiebox.wingcrafter.spells.util.Spell;
 import org.aussiebox.wingcrafter.spells.util.SpellRegistry;
 import org.aussiebox.wingcrafter.util.WingcrafterUtil;
@@ -98,13 +97,13 @@ public class Wingcrafter implements ModInitializer {
             player.damage((ServerWorld) world, damageSource, 524);
         });
 
-        PayloadTypeRegistry.playC2S().register(UpdateSoulScrollDataPayload.ID, UpdateSoulScrollDataPayload.PACKET_CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(UpdateSoulScrollDataPayload.ID, (payload, context) -> {
+        PayloadTypeRegistry.playC2S().register(UpdateSpellcasterDataPayload.ID, UpdateSpellcasterDataPayload.PACKET_CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateSpellcasterDataPayload.ID, (payload, context) -> {
             PlayerEntity player = context.player();
             ItemStack itemStack = payload.itemStack();
             int slot = player.getInventory().getSlotWithStack(payload.itemStack());
 
-            itemStack.set(ModDataComponentTypes.SOUL_SCROLL_SPELLS, new SoulScrollSpells(payload.spell1(), payload.spell2(), payload.spell3()));
+            itemStack.set(ModDataComponentTypes.SPELLCASTER_SPELLS, payload.spellList());
             player.getInventory().setStack(slot, itemStack);
             player.getInventory().markDirty();
         });

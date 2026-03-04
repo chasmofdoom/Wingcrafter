@@ -5,23 +5,21 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import org.aussiebox.wingcrafter.init.ScreenHandlerTypeInit;
-import org.aussiebox.wingcrafter.network.SoulScrollDataPayload;
+import org.aussiebox.wingcrafter.network.SpellcasterDataPayload;
 
-public class SoulScrollSpellSelectScreenHandler extends ScreenHandler {
-    public String spell1;
-    public String spell2;
-    public String spell3;
+import java.util.List;
+
+public class SpellcasterSpellSelectScreenHandler extends ScreenHandler {
+    public List<String> spells;
     public ItemStack itemStack;
 
-    public SoulScrollSpellSelectScreenHandler(int syncId, PlayerInventory playerInventory, SoulScrollDataPayload payload) {
+    public SpellcasterSpellSelectScreenHandler(int syncId, PlayerInventory playerInventory, SpellcasterDataPayload payload) {
         this(syncId, playerInventory, payload.itemStack());
-        this.spell1 = payload.spell1();
-        this.spell2 = payload.spell2();
-        this.spell3 = payload.spell3();
+        this.spells = payload.spellList();
         this.itemStack = payload.itemStack();
     }
 
-    public SoulScrollSpellSelectScreenHandler(int syncId, PlayerInventory playerInventory, ItemStack itemStack) {
+    public SpellcasterSpellSelectScreenHandler(int syncId, PlayerInventory playerInventory, ItemStack itemStack) {
         super(ScreenHandlerTypeInit.SOUL_SCROLL_SPELL_SELECT, syncId);
     }
 

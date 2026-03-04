@@ -18,19 +18,21 @@ import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.component.ModDataComponentTypes;
 import org.aussiebox.wingcrafter.item.custom.DragonflameCactusItem;
 import org.aussiebox.wingcrafter.item.custom.FireglobeItem;
-import org.aussiebox.wingcrafter.item.custom.SoulScrollItem;
+import org.aussiebox.wingcrafter.item.custom.SpellcasterItem;
 
 import java.util.function.Function;
 
 public class ModItems {
 
-    public static final Item SOUL_SCROLL = registerItem("soul_scroll", SoulScrollItem::new, new Item.Settings()
+    public static final Item SOUL_SCROLL = registerItem("soul_scroll", SpellcasterItem::new, new Item.Settings()
             .rarity(Rarity.EPIC)
             .fireproof()
             .maxCount(1)
-            .component(ModDataComponentTypes.SOUL_SCROLL_OWNER, null)
-            .component(ModDataComponentTypes.SOUL_SCROLL_OWNER_NAME, null)
-            .component(ModDataComponentTypes.SOUL_SCROLL_SPELLS, null)
+            .component(ModDataComponentTypes.SPELLCASTER_OWNER, null)
+            .component(ModDataComponentTypes.SPELLCASTER_OWNER_NAME, null)
+            .component(ModDataComponentTypes.SPELLCASTER_SPELLS, null)
+            .component(ModDataComponentTypes.SPELLCASTER_SELECTED_SLOT, 0)
+            .component(ModDataComponentTypes.SPELLCASTER_SLOT_MAXIMUM, 6)
     );
     public static final BlockItem FIREGLOBE = registerBlockItem("fireglobe", FireglobeItem::new, new Item.Settings()
             .useBlockPrefixedTranslationKey()

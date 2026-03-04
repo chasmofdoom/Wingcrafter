@@ -21,6 +21,7 @@ import net.minecraft.world.RaycastContext;
 import org.aussiebox.wingcrafter.Wingcrafter;
 import org.aussiebox.wingcrafter.cca.FreezeComponent;
 import org.aussiebox.wingcrafter.cca.SoulComponent;
+import org.aussiebox.wingcrafter.cca.SpellDataComponent;
 import org.aussiebox.wingcrafter.spells.util.Spell;
 
 import java.util.List;
@@ -29,15 +30,17 @@ public class FrostbeamSpell extends Spell {
     public FrostbeamSpell() {
         super(
                 "frostbeam",
+                0xFFA8FFFF,
                 Wingcrafter.id("textures/gui/sprites/soul_scroll/spells/frostbeam.png"),
                 3,
                 0,
-                100
+                200
         );
     }
 
     @Override
     public void cast(ServerPlayerEntity source) {
+        if (SpellDataComponent.KEY.get(source).getSpellCooldown(getSpellID()) > 0) return;
         super.cast(source);
         afflictSoulPenalty(source);
 

@@ -126,7 +126,7 @@ public class DragonflameCactusBlock extends Block {
     protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         for (Direction direction : Direction.Type.HORIZONTAL) {
             BlockState blockState = world.getBlockState(pos.offset(direction));
-            if (blockState.isSolid() || world.getFluidState(pos.offset(direction)).isIn(FluidTags.LAVA)) {
+            if (blockState.isSolidBlock(world, pos) || world.getFluidState(pos.offset(direction)).isIn(FluidTags.LAVA)) {
                 return false;
             }
         }

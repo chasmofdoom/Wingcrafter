@@ -1,6 +1,10 @@
 {
   "itemGroup.wingcrafter.wingcrafter": "Wingcrafter",
   "block.wingcrafter.scroll": "Scroll",
+      "scroll.mode.edit": "Edit Mode",
+      "scroll.mode.view": "View Mode",
+      "scroll.tip.title": "Name your scroll here...",
+      "scroll.tip.text": "Welcome to the Scroll editor!\nHere you may write down anything you wish, and it will be saved to the Scroll upon closing this menu.\nThere is no text limit. Go wild!\n\nScrolls support MiniMessage.",
   "block.wingcrafter.fireglobe": "Fireglobe",
   "item.wingcrafter.seal": "Seal",
   "item.wingcrafter.dragonflame_cactus": "Dragonflame Cactus",
@@ -37,11 +41,10 @@
       "item.wingcrafter.soul_scroll.tooltip.1": "A powerful piece of parchment, hidden away from",
       "item.wingcrafter.soul_scroll.tooltip.2": "dragonkind inside of the long-lost ancient cities.",
       "item.wingcrafter.soul_scroll.tooltip.3": "Its power allows the bearer to cast Animus spells.",
-      "item.wingcrafter.tooltip.spell_caster": "This item can cast potentially dangerous spells.",
       "item.wingcrafter.soul_scroll.tooltip.owner": "Rightfully Owned By: ",
-      "item.wingcrafter.soul_scroll.tooltip.spell1": "Spell 1: ",
-      "item.wingcrafter.soul_scroll.tooltip.spell2": "Spell 2: ",
-      "item.wingcrafter.soul_scroll.tooltip.spell3": "Spell 3: ",
+
+  "item.wingcrafter.tooltip.spellcaster": "This item can cast potentially dangerous spells.",
+  "item.wingcrafter.tooltip.spellcaster.spell": "Spell %1$s: ",
 
   "spell.wingcrafter.frostbeam": "Frostbeam",
   "spell.wingcrafter.flamethrower": "Flamethrower",
@@ -49,9 +52,8 @@
   "entity.wingcrafter.dragonflame_cactus": "Dragonflame Cactus",
 
   "key.category.wingcrafter.keybinds": "Wingcrafter",
-      "key.wingcrafter.spell1": "Cast Spell In First Slot",
-      "key.wingcrafter.spell2": "Cast Spell In Second Slot",
-      "key.wingcrafter.spell3": "Cast Spell In Third Slot",
+      "key.wingcrafter.cast": "Cast Spell In Selected Slot",
+      "key.wingcrafter.mouse_scroll_modifier": "Mouse Scroll Modifier",
 
   "death.attack.soul": "%1$s yearned for more power than they could handle",
 

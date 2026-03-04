@@ -1,118 +1,164 @@
 package org.aussiebox.wingcrafter.client.screen;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
+import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
+import io.wispforest.owo.ui.component.*;
+import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.container.ScrollContainer;
+import io.wispforest.owo.ui.core.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
-import org.aussiebox.wingcrafter.block.custom.ScrollBlock;
+import net.minecraft.text.TextCodecs;
 import org.aussiebox.wingcrafter.network.ScrollTextPayload;
 import org.aussiebox.wingcrafter.screenhandler.ScrollBlockScreenHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class ScrollScreen extends HandledScreen<ScrollBlockScreenHandler> {
-    int screenWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
-    int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
+public class ScrollScreen extends BaseOwoHandledScreen<FlowLayout, ScrollBlockScreenHandler> {
+    String titleText = "";
+    String scrollText = "";
     boolean editMode = true;
 
-    String titleText = "Custom Screen Title";
-
-    int editorWidth = screenWidth / 10 * 8;
-    int editorHeight = (int) ((double) screenHeight / 10 * 6.9);
-    int bottomButtonX = screenWidth / 2;
-    int bottomButtonY = (int) ((double) screenHeight / 10 * 9.05);
+    ScrollContainer<FlowLayout> titleContainer;
+    ScrollContainer<FlowLayout> textContainer;
 
     public ScrollScreen(ScrollBlockScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        playerInventoryTitleX = -100;
+        playerInventoryTitleX = -10000;
     }
 
     @Override
-    protected void init() {
-    final ScrollBlockEntity blockEntity = this.handler.getBlockEntity();
+    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
+        return OwoUIAdapter.create(this, Containers::verticalFlow);
+    }
 
-        TextFieldWidget title = new TextFieldWidget(this.textRenderer, screenWidth / 10, screenHeight / 10 - this.textRenderer.fontHeight + 10, editorWidth, this.textRenderer.fontHeight + 10, Text.of("Write a good title here..."));
-        title.setPlaceholder(Text.of("Give your scroll a title here..."));
-        title.setMaxLength(75);
-        if (!Objects.equals(this.handler.getTitle(), "")) {
-            title.setText(this.handler.getTitle());
-        }
+    @Override
+    protected void build(FlowLayout rootComponent) {
+        setScrollTitleBox();
+        setScrollTextBox();
 
-        TextWidget viewTitle = new TextWidget(screenWidth / 10, screenHeight / 10 - this.textRenderer.fontHeight + 10, editorWidth, this.textRenderer.fontHeight + 10, Text.of("Read a title here..."), this.textRenderer);
+        rootComponent.alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
 
-        EditBoxWidget text = new EditBoxWidget.Builder()
-                .x(screenWidth / 10)
-                .y(screenHeight / 10 - this.textRenderer.fontHeight + 35)
-                .placeholder(Text.literal("Welcome to the scroll editor!\n\nWith scrolls, you can share stories, or take notes!\nThey might even support Markdown in future!\n\nScrolls have no length limit. Write as much as you want!"))
-                .build(this.textRenderer, editorWidth, editorHeight, Text.literal("Immortalise your story with the power of parchment."));
-        if (!Objects.equals(this.handler.getText(), "")) {
-            text.setText(this.handler.getText());
-        }
+        FlowLayout editor = Containers.verticalFlow(Sizing.content(), Sizing.content());
+        editor.child(getScrollTitleBox());
+        editor.child(getScrollTextBox());
 
-        ScrollableTextWidget viewText = new ScrollableTextWidget(screenWidth / 10, screenHeight / 10 - this.textRenderer.fontHeight + 35, editorWidth, editorHeight, Text.literal("Knowledge is a flame in the darkness."), this.textRenderer);
-        if (!Objects.equals(this.handler.getText(), "")) {
-            viewText.setMessage(Text.of(this.handler.getText()));
-        }
+        rootComponent.child(editor.id("editor"));
+        rootComponent.child(getModeButton(rootComponent));
+    }
 
-        ButtonWidget finishWriting = ButtonWidget.builder(Text.of("Finish Writing"), (btn) -> {
-            ScrollTextPayload payload = new ScrollTextPayload(blockEntity.getPos(), text.getText(), title.getText());
-            ClientPlayNetworking.send(payload);
-        }).dimensions(bottomButtonX + 5, bottomButtonY, 120, 20).build();
+    @Override
+    public void close() {
+        ScrollTextPayload payload = new ScrollTextPayload(this.handler.getBlockEntity().getPos(), scrollText, titleText);
+        ClientPlayNetworking.send(payload);
+        super.close();
+    }
 
-        ButtonWidget switchModes = ButtonWidget.builder(Text.of("Switch Modes"), (btn) -> {
-            editMode = !editMode;
-            if (editMode) {
-                text.visible = true;
-                title.visible = true;
-                viewText.visible = false;
-                viewTitle.visible = false;
-                titleText = "Editing Scroll...";
-            } else {
-                text.visible = false;
-                title.visible = false;
-                viewText.visible = true;
-                viewText.setMessage(Text.of(text.getText()));
-                viewTitle.visible = true;
-                viewTitle.setMessage(Text.of(title.getText()));
-                titleText = "Reading Scroll...";
-            }
-        }).dimensions(bottomButtonX - 125, bottomButtonY, 120, 20).build();
+    public ScrollContainer<FlowLayout> getScrollTitleBox() {
+        return this.titleContainer;
+    }
 
-        this.addDrawableChild(title);
-        this.addDrawableChild(text);
-        this.addDrawableChild(viewTitle);
-        this.addDrawableChild(viewText);
-        this.addDrawableChild(finishWriting);
-        this.addDrawableChild(switchModes);
+    public void setScrollTitleBox() {
+        if (Objects.equals(titleText, "")) titleText = this.handler.getTitle();
+        if (titleText == null) titleText = "";
 
-        BlockState blockState = Objects.requireNonNull(blockEntity.getWorld()).getBlockState(blockEntity.getPos());
-        if (blockState.get(ScrollBlock.SEALED)) {
-            editMode = false;
-            switchModes.visible = false;
-            finishWriting.visible = false;
-        }
-
+        FlowLayout flow = Containers.horizontalFlow(Sizing.fill(), Sizing.content());
         if (editMode) {
-            text.visible = true;
-            title.visible = true;
-            viewText.visible = false;
-            viewTitle.visible = false;
-            titleText = "Editing Scroll...";
+            TextBoxComponent textBox = Components.textBox(Sizing.fill());
+
+            textBox.setMaxLength(1000000);
+            textBox.setText(titleText);
+            textBox.setPlaceholder(Text.translatable("scroll.tip.title"));
+            textBox.onChanged().subscribe(newText -> {
+                titleText = newText;
+            });
+
+            flow.child(textBox);
         } else {
-            text.visible = false;
-            title.visible = false;
-            viewText.visible = true;
-            viewText.setMessage(Text.of(text.getText()));
-            viewTitle.visible = true;
-            viewTitle.setMessage(Text.of(title.getText()));
-            titleText = "Reading Scroll...";
+            Component textComponent = MiniMessage.miniMessage().deserialize(titleText);
+            String textJSON = GsonComponentSerializer.gson().serialize(textComponent);
+            Text text = TextCodecs.CODEC
+                    .decode(JsonOps.INSTANCE, new Gson().fromJson(textJSON, JsonElement.class))
+                    .getOrThrow()
+                    .getFirst();
+
+            LabelComponent label = Components.label(text);
+
+            flow.child(label);
         }
+
+        ScrollContainer<FlowLayout> container = Containers.horizontalScroll(Sizing.fill(80), Sizing.content(), flow);
+        container.margins(Insets.vertical(10));
+        container.id("title");
+        this.titleContainer = container;
+    }
+
+    public ScrollContainer<FlowLayout> getScrollTextBox() {
+        return this.textContainer;
+    }
+
+    public void setScrollTextBox() {
+        if (Objects.equals(scrollText, "")) scrollText = this.handler.getText();
+        if (scrollText == null) scrollText = "";
+
+        FlowLayout flow = Containers.verticalFlow(Sizing.fill(), Sizing.fill());
+        if (editMode) {
+            TextAreaComponent textBox = Components.textArea(Sizing.fill(), Sizing.fill());
+
+            textBox.setText(scrollText);
+            textBox.displayCharCount(true);
+            textBox.onChanged().subscribe(newText -> {
+                scrollText = newText;
+            });
+
+            flow.child(textBox);
+        } else {
+            Component textComponent = MiniMessage.miniMessage().deserialize(scrollText);
+            String textJSON = GsonComponentSerializer.gson().serialize(textComponent);
+            Text text = TextCodecs.CODEC
+                    .decode(JsonOps.INSTANCE, new Gson().fromJson(textJSON, JsonElement.class))
+                    .getOrThrow()
+                    .getFirst();
+
+            LabelComponent label = Components.label(text);
+            label.horizontalSizing(Sizing.fill(100));
+            label.verticalSizing(Sizing.content());
+
+            flow.child(label);
+        }
+
+        ScrollContainer<FlowLayout> container = Containers.verticalScroll(Sizing.fill(80), Sizing.fill(60), flow);
+        container.margins(Insets.vertical(10));
+        container.id("text");
+        this.textContainer = container;
+    }
+
+    public ButtonComponent getModeButton(FlowLayout rootComponent) {
+        ButtonComponent button = Components.button(
+                editMode ? Text.translatable("scroll.mode.edit") : Text.translatable("scroll.mode.view"),
+                buttonComponent -> {
+                    editMode = !editMode;
+                    buttonComponent.setMessage(editMode ? Text.translatable("scroll.mode.edit") : Text.translatable("scroll.mode.view"));
+
+                    setScrollTitleBox();
+                    setScrollTextBox();
+
+                    FlowLayout editor = rootComponent.childById(FlowLayout.class, "editor");
+                    editor.clearChildren();
+                    editor.child(getScrollTitleBox());
+                    editor.child(getScrollTextBox());
+                }
+        );
+        return button;
     }
 
     @Override
@@ -123,17 +169,5 @@ public class ScrollScreen extends HandledScreen<ScrollBlockScreenHandler> {
         } else {
             return super.keyPressed(input);
         }
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-
-        context.drawText(this.textRenderer, titleText, screenWidth/2-(textRenderer.getWidth(titleText)/2), screenHeight/10 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
-    }
-
-    @Override
-    protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) {
-
     }
 }

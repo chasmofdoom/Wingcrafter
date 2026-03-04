@@ -1,4 +1,4 @@
-package org.aussiebox.wingcrafter.client.block.entity.render;
+package org.aussiebox.wingcrafter.client.block.entity.render.state;
 
 import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
 import net.minecraft.client.util.SpriteIdentifier;

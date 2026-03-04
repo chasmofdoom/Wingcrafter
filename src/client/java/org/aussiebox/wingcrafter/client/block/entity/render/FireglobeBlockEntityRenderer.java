@@ -20,6 +20,7 @@ import org.aussiebox.wingcrafter.Wingcrafter;
 import org.aussiebox.wingcrafter.block.blockentities.FireglobeBlockEntity;
 import org.aussiebox.wingcrafter.block.custom.FireglobeBlock;
 import org.aussiebox.wingcrafter.client.WingcrafterClient;
+import org.aussiebox.wingcrafter.client.block.entity.render.state.FireglobeBlockEntityRenderState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;

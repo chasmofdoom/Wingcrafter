@@ -27,6 +27,7 @@ import org.aussiebox.wingcrafter.block.ModBlocks;
 import org.aussiebox.wingcrafter.block.blockentities.ScrollBlockEntity;
 import org.aussiebox.wingcrafter.cca.SoulComponent;
 import org.aussiebox.wingcrafter.client.config.ClientConfig;
+import org.aussiebox.wingcrafter.client.hud.SpellcasterSpellHud;
 import org.aussiebox.wingcrafter.item.ModItems;
 import org.aussiebox.wingcrafter.network.SoulKillPayload;
 
@@ -72,9 +73,10 @@ public class HudRenderingEntrypoint implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        HudElementRegistry.attachElementBefore(VanillaHudElements.FOOD_BAR, Identifier.of(Wingcrafter.MOD_ID, "soul_bar"), HudRenderingEntrypoint::renderSoul);
-        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Identifier.of(Wingcrafter.MOD_ID, "soul_glass_overlay"), HudRenderingEntrypoint::renderSoulGlassOverlay);
-        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Identifier.of(Wingcrafter.MOD_ID, "scroll_tooltip"), HudRenderingEntrypoint::renderScroll);
+        HudElementRegistry.attachElementBefore(VanillaHudElements.FOOD_BAR, Wingcrafter.id("soul_bar"), HudRenderingEntrypoint::renderSoul);
+        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Wingcrafter.id("soul_glass_overlay"), HudRenderingEntrypoint::renderSoulGlassOverlay);
+        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Wingcrafter.id("scroll_tooltip"), HudRenderingEntrypoint::renderScroll);
+        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Wingcrafter.id("soul_scroll_spells"), SpellcasterSpellHud::render);
     }
 
     private static void renderSoul(DrawContext context, RenderTickCounter tickCounter) {

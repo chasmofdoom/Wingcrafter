@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.12-SNAPSHOT'
+    id 'fabric-loom' version '1.13-SNAPSHOT'
     id 'maven-publish'
     id 'io.freefair.lombok' version '9.0.0'
 }
@@ -71,6 +71,10 @@ dependencies {
     modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
     modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-world:${project.cca_version}"
     modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-scoreboard:${project.cca_version}"
+
+    modImplementation include ("net.kyori:adventure-platform-fabric:${project.adventure_fabric_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-${devauth_module}:${devauth_version}")
 }
