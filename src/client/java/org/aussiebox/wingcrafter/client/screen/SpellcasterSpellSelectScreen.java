@@ -30,7 +30,7 @@ public class SpellcasterSpellSelectScreen extends BaseOwoHandledScreen<FlowLayou
     Object2ObjectMap<Integer, ButtonComponent> spellButtons = new Object2ObjectLinkedOpenHashMap<>();
 
     public static final int buttonSize = 24;
-    public static final Identifier SELECTED = Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_select/selection.png");
+    public static final Identifier SELECTED = Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/gamemode_switcher/selection.png");
     public static final Identifier UNSELECTED = Identifier.of(Wingcrafter.MOD_ID, "textures/gui/sprites/soul_scroll/spell_select/slot.png");
 
     Text titleText = Text.of("Spell Selection");
